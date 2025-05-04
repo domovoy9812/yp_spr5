@@ -3,8 +3,8 @@ package ru.yandex.practicum.bliushtein.spr5.data.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import ru.yandex.practicum.bliushtein.spr5.data.entity.Item;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
-    Optional<Item> findByName(String name);
+    List<Item> findByName(String name);
 }

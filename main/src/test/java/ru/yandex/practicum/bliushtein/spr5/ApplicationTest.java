@@ -14,7 +14,8 @@ public class ApplicationTest extends AbstractIntegrationTestWithTestcontainers {
 
     @Test
     void test() throws Exception {
-        mockMvc.perform(get("/item"))
+        mockMvc.perform(get("/item/generate"));
+        mockMvc.perform(get("/item/{id}", 1))
                 .andExpect(status().isOk())
                 .andExpect(view().name("item"))
                 .andExpect(model().attributeExists("item"));

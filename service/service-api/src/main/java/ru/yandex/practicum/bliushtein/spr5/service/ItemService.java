@@ -1,13 +1,16 @@
 package ru.yandex.practicum.bliushtein.spr5.service;
 
-import ru.yandex.practicum.bliushtein.spr5.dto.ItemDto;
+import ru.yandex.practicum.bliushtein.spr5.service.dto.ItemDto;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface ItemService {
-    void deleteAll();
-    ItemDto createItem(String name);
+    ItemDto createItem(String name, String description, int price);
     List<ItemDto> getAllItems();
-    Optional<ItemDto> findItemByName(String name);
+    List<ItemDto> findItemsByName(String name);
+    Optional<ItemDto> findItemById(Long id);
+    void increaseAmountInCart(Long itemId);
+    void decreaseAmountInCart(Long itemId);
+
 }

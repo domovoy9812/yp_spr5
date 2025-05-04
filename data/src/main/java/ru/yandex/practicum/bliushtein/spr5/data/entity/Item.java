@@ -8,13 +8,32 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", nullable = false)
+    @Column(nullable = false)
     private String name;
+
+    private String description;
+
+    @Column(nullable = false)
+    private int price;
+
+    @Column(nullable = false)
+    private int amountInCart;
 
     public Item() { }
 
-    public Item(String name) {
+    public Item(String name, String description, int price, int amountInCart) {
         this.name = name;
+        this.description = description;
+        this.price = price;
+        this.amountInCart = amountInCart;
+    }
+
+    public Item(Long id, String name, String description, int price, int amountInCart) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.amountInCart = amountInCart;
     }
 
     public Long getId() {
@@ -31,5 +50,29 @@ public class Item {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public int getAmountInCart() {
+        return amountInCart;
+    }
+
+    public void setAmountInCart(int amountInCart) {
+        this.amountInCart = amountInCart;
     }
 }

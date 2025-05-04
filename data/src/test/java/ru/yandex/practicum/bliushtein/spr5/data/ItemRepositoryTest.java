@@ -19,11 +19,15 @@ public class ItemRepositoryTest extends AbstractJpaTestWithTestcontainers {
     }
 
     @Test
-    void testItemRepository() {
-        Item newItem = new Item("test name");
+    void test_saveAndFindAll() {
+        Item newItem = new Item("test name", "test description", 100, 0);
         itemRepository.save(newItem);
         List<Item> allItems = itemRepository.findAll();
         assertEquals(1, allItems.size());
-        assertEquals(newItem.getName(), allItems.getFirst().getName());
+        Item foundItem = allItems.getFirst();
+        assertEquals(newItem.getName(), foundItem.getName());
+        assertEquals(newItem.getDescription(), foundItem.getDescription());
+        assertEquals(newItem.getPrice(), foundItem.getPrice());
+        assertEquals(newItem.getAmountInCart(), foundItem.getAmountInCart());
     }
 }
