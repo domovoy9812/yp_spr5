@@ -1,0 +1,20 @@
+version: "3.8"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgresql-db:5432/bliushtein_yp_sprint5_db
+      SPRING_DATASOURCE_USERNAME: bliushtein_yp_sprint5
+      SPRING_DATASOURCE_PASSWORD: 12345
+  postgresql-db:
+    image: "postgres:17"
+    environment:
+      POSTGRES_DB: bliushtein_yp_sprint5_db
+      POSTGRES_USER: bliushtein_yp_sprint5
+      POSTGRES_PASSWORD: 12345
+    ports:
+      - "5432:5432"
