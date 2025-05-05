@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.bliushtein.spr5.service.CartService;
 import ru.yandex.practicum.bliushtein.spr5.service.ItemService;
 import ru.yandex.practicum.bliushtein.spr5.service.ShopException;
 import ru.yandex.practicum.bliushtein.spr5.service.dto.ItemDto;
@@ -12,9 +13,11 @@ import ru.yandex.practicum.bliushtein.spr5.service.dto.ItemDto;
 @RequestMapping("/item")
 public class ItemController {
     private final ItemService itemService;
+    private final CartService cartService;
 
-    public ItemController(@Autowired ItemService itemService) {
+    public ItemController(@Autowired ItemService itemService, @Autowired CartService cartService) {
         this.itemService = itemService;
+        this.cartService = cartService;
     }
 
     @GetMapping("/{id}")
@@ -23,13 +26,13 @@ public class ItemController {
         return "item";
     }
 
-    @PostMapping("/{id}/addToCart")
-    public String changeAmountInCart(Model model, @PathVariable("id") Long id, @RequestParam("action") String action) {
-        if ("plus".equals(action)) {
-            itemService.increaseAmountInCart(id);
-        } else if ("minus".equals(action)) {
-            itemService.decreaseAmountInCart(id);
-        } else throw new ShopException("Incorrect action value %s".formatted(action));
+    @PostMapping("/{id}/changeAmountInCart")
+    public String changeAmountInCart(@PathVariable("id") Long id, @RequestParam("action") String action) {
+        switch (action) {
+            case "plus" -> cartService.increaseAmountInCart(id);
+            case "minus" -> cartService.decreaseAmountInCart(id);
+            default -> throw new ShopException("Incorrect action value %s".formatted(action));
+        }
         return "redirect:/item/" + id;
     }
 

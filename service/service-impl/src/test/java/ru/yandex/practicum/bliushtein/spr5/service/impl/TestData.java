@@ -7,6 +7,10 @@ public class TestData {
     public static final Long NOT_EXISTING_ITEM_ID = -1L;
     public static final Item ITEM_1 = new Item(1L, "name", "description", 100,
             1);
+    public static final Item ITEM_2 = new Item(1L, "name 2", "description 2", 10,
+            3);
+    public static final int ITEM_1_AND_ITEM_2_TOTAL_PRICE = ITEM_1.getPrice() * ITEM_1.getAmountInCart()
+            + ITEM_2.getPrice() * ITEM_2.getAmountInCart();
     public static final Item ITEM_NOT_IN_CART = new Item(1L, "name", "description", 100,
             ITEM_AMOUNT_IN_CART_0);
 

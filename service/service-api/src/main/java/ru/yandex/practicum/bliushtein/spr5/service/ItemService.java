@@ -9,8 +9,5 @@ public interface ItemService {
     ItemDto createItem(String name, String description, int price);
     List<ItemDto> getAllItems();
     List<ItemDto> findItemsByName(String name);
-    Optional<ItemDto> findItemById(Long id);
-    void increaseAmountInCart(Long itemId);
-    void decreaseAmountInCart(Long itemId);
-
+    Optional<ItemDto> findItemById(Long itemId);
 }

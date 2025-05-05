@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.yandex.practicum.bliushtein.spr5.data.entity.Item;
 import ru.yandex.practicum.bliushtein.spr5.data.repository.ItemRepository;
-import ru.yandex.practicum.bliushtein.spr5.service.ShopException;
 import ru.yandex.practicum.bliushtein.spr5.service.dto.ItemDto;
 import ru.yandex.practicum.bliushtein.spr5.service.ItemService;
 import ru.yandex.practicum.bliushtein.spr5.service.mapper.ItemMapper;
@@ -49,33 +48,4 @@ public class ItemServiceImpl implements ItemService {
         return itemRepository.findById(itemId).map(itemMapper::toDto);
     }
 
-    @Override
-    @Transactional
-    public void increaseAmountInCart(Long itemId) {
-        Objects.requireNonNull(itemId);
-        itemRepository.findById(itemId).ifPresentOrElse(this::increaseAmountInCart,
-                () -> ShopException.throwItemNotFound(itemId));
-    }
-
-    @Override
-    @Transactional
-    public void decreaseAmountInCart(Long itemId) {
-        Objects.requireNonNull(itemId);
-        itemRepository.findById(itemId).ifPresentOrElse(this::decreaseAmountInCart,
-                () -> ShopException.throwItemNotFound(itemId));
-    }
-
-    private void increaseAmountInCart(Item item) {
-        item.setAmountInCart(item.getAmountInCart() + 1);
-        itemRepository.save(item);
-    }
-
-    private void decreaseAmountInCart(Item item) {
-        if (item.getAmountInCart() == 0) {
-            ShopException.throwAmountInCartCantBeNegative();
-        } else {
-            item.setAmountInCart(item.getAmountInCart() - 1);
-            itemRepository.save(item);
-        }
-    }
 }

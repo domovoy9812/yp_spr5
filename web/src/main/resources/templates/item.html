@@ -6,16 +6,13 @@
 </head>
 
 <body>
-    <!-- В href ссылка на страницу заказов -->
-    <a href="@{/orders}" style="float:right;">
+    <a th:href="@{/orders}" style="float:right;">
         <b>ЗАКАЗЫ</b>
     </a>
-    <!-- В href ссылка на корзину -->
-    <a href="@{/cart}" style="float:right;">
+    <a th:href="@{/cart}" style="float:right;">
         <b>КОРЗИНА</b>
     </a>
-    <!-- В href ссылка на главную страницу -->
-    <a href="@{/main}" style="float:right;">
+    <a th:href="@{/main}" style="float:right;">
         <b>ГЛАВНАЯ</b>
     </a>
     <div style="width:70%;margin-left:auto;margin-right:auto;">
@@ -24,25 +21,16 @@
             <!--img width="300" height="300" th:src="..."-->
         </p>
         <p>
-            <!-- В text название товара -->
-            <b th:text="${item.name}"></b>
-            <!-- В text цена товара -->
-            <b th:text="${item.price}" style="text-align:right;"></b>
+            <b th:text="${'Название товара: ' + item.name}"></b>
+            <b th:text="${'Цена товара: ' + item.price}" style="text-align:right;"></b>
         </p>
         <p>
-            <!-- В text описание товара -->
-            <span th:text="${item.description}"></span>
+            <span th:text="${'Описание товара: ' + item.description}"></span>
         </p>
-        <!-- 
-		В action ссылка на изменение количества товара в корзине.
-		Передается параметр запроса action=[minus|plus]
-	-->
-        <form th:action="@{/item/{id}/addToCart(id=${item.id})}" method="post">
+        <form th:action="@{/item/{id}/changeAmountInCart(id=${item.id})}" method="post">
             <button name="action" value="minus">-</button>
-            <!-- В text количество товара в корзине -->
             <span th:text="${item.amountInCart}"></span>
             <button name="action" value="plus">+</button>
-            <!-- В if true, если товар еще не был добавлен в корзину, false, если уже был -->
             <button name="action" value="plus" th:if="${item.amountInCart == 0}" style="float:right;">В корзину</button>
         </form>
     </div>
