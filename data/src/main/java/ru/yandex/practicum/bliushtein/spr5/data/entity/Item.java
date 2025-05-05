@@ -29,11 +29,8 @@ public class Item {
     }
 
     public Item(Long id, String name, String description, int price, int amountInCart) {
+        this(name, description, price, amountInCart);
         this.id = id;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.amountInCart = amountInCart;
     }
 
     public Long getId() {

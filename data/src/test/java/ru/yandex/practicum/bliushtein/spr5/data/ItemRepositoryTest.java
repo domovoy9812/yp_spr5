@@ -8,6 +8,7 @@ import ru.yandex.practicum.bliushtein.spr5.data.repository.ItemRepository;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static ru.yandex.practicum.bliushtein.spr5.data.TestData.*;
 
 public class ItemRepositoryTest extends AbstractJpaTestWithTestcontainers {
 
@@ -19,15 +20,26 @@ public class ItemRepositoryTest extends AbstractJpaTestWithTestcontainers {
     }
 
     @Test
-    void test_saveAndFindAll() {
-        Item newItem = new Item("test name", "test description", 100, 0);
-        itemRepository.save(newItem);
-        List<Item> allItems = itemRepository.findAll();
-        assertEquals(1, allItems.size());
-        Item foundItem = allItems.getFirst();
-        assertEquals(newItem.getName(), foundItem.getName());
-        assertEquals(newItem.getDescription(), foundItem.getDescription());
-        assertEquals(newItem.getPrice(), foundItem.getPrice());
-        assertEquals(newItem.getAmountInCart(), foundItem.getAmountInCart());
+    void test_findItemsInCart() {
+        Item savedItem = itemRepository.save(copyItem(ITEM));
+        List<Item> items = itemRepository.findItemsInCart();
+        assertEquals(1, items.size());
+        assertEquals(savedItem.getId(), items.getFirst().getId());
+    }
+
+    @Test
+    void test_clearCart() {
+        itemRepository.save(copyItem(ITEM));
+        assertEquals(1, itemRepository.findItemsInCart().size());
+        itemRepository.clearCart();
+        assertEquals(0, itemRepository.findItemsInCart().size());
+    }
+
+    @Test
+    void test_findByName() {
+        Item savedItem = itemRepository.save(copyItem(ITEM));
+        List<Item> foundItems = itemRepository.findByName(ITEM.getName());
+        assertEquals(1, foundItems.size());
+        assertEquals(savedItem.getId(), foundItems.getFirst().getId());
     }
 }

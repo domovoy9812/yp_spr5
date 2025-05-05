@@ -8,7 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import ru.yandex.practicum.bliushtein.spr5.data.entity.Item;
+import ru.yandex.practicum.bliushtein.spr5.data.entity.Order;
+import ru.yandex.practicum.bliushtein.spr5.data.entity.OrderItem;
 import ru.yandex.practicum.bliushtein.spr5.data.repository.ItemRepository;
+import ru.yandex.practicum.bliushtein.spr5.data.repository.OrderRepository;
 import ru.yandex.practicum.bliushtein.spr5.service.CartService;
 import ru.yandex.practicum.bliushtein.spr5.service.ShopException;
 import ru.yandex.practicum.bliushtein.spr5.service.dto.CartDto;
@@ -31,6 +34,9 @@ public class CartServiceImplTest {
 
     @MockitoBean
     ItemRepository itemRepositoryMock;
+
+    @MockitoBean
+    OrderRepository orderRepositoryMock;
 
     @Test
     void test_increaseAmountInCart() {
@@ -118,5 +124,31 @@ public class CartServiceImplTest {
         CartDto cart = cartService.getCart();
         assertEquals(ITEM_1_AND_ITEM_2_TOTAL_PRICE, cart.totalPrice());
         assertTrue(cart.items().stream().map(ItemDto::id).toList().containsAll(List.of(ITEM_1.getId(), ITEM_2.getId())));
+    }
+
+    @Test
+    void test_buy() {
+        when(itemRepositoryMock.findItemsInCart())
+                .thenReturn(List.of(ITEM_1, ITEM_2));
+        when(orderRepositoryMock.save(any())).thenReturn(CREATED_ORDER);
+        Long orderId = cartService.buy();
+        assertEquals(CREATED_ORDER.getId(), orderId);
+        ArgumentCaptor<Order> orderCaptor = ArgumentCaptor.forClass(Order.class);
+        verify(orderRepositoryMock).save(orderCaptor.capture());
+        Order order = orderCaptor.getValue();
+        assertEquals(ITEM_1_AND_ITEM_2_TOTAL_PRICE, order.getTotalPrice());
+        List<Item> itemsInOrder = order.getOrderItems().stream().map(OrderItem::getItem).toList();
+        assertTrue(itemsInOrder.containsAll(List.of(ITEM_1, ITEM_2)));
+        verify(itemRepositoryMock).clearCart();
+    }
+
+    //TODO add integration test to test transaction rollback
+    @Test
+    void test_buy_emptyCart() {
+        when(itemRepositoryMock.findItemsInCart())
+                .thenReturn(List.of());
+        assertThrows(ShopException.class, () -> cartService.buy());
+        verify(orderRepositoryMock, never()).save(any());
+        verify(itemRepositoryMock, never()).clearCart();
     }
 }

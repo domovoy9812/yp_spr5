@@ -4,7 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.yandex.practicum.bliushtein.spr5.data.entity.Item;
+import ru.yandex.practicum.bliushtein.spr5.data.entity.Order;
+import ru.yandex.practicum.bliushtein.spr5.data.entity.OrderItem;
 import ru.yandex.practicum.bliushtein.spr5.data.repository.ItemRepository;
+import ru.yandex.practicum.bliushtein.spr5.data.repository.OrderRepository;
 import ru.yandex.practicum.bliushtein.spr5.service.CartService;
 import ru.yandex.practicum.bliushtein.spr5.service.ShopException;
 import ru.yandex.practicum.bliushtein.spr5.service.dto.CartDto;
@@ -16,9 +19,14 @@ import java.util.Objects;
 @Service
 public class CartServiceImpl implements CartService {
     private final ItemRepository itemRepository;
+    private final OrderRepository orderRepository;
+
     private final ItemMapper itemMapper;
-    public CartServiceImpl(@Autowired ItemRepository itemRepository, @Autowired ItemMapper itemMapper) {
+    public CartServiceImpl(@Autowired ItemRepository itemRepository,
+                           @Autowired OrderRepository orderRepository,
+                           @Autowired ItemMapper itemMapper) {
         this.itemRepository = itemRepository;
+        this.orderRepository = orderRepository;
         this.itemMapper = itemMapper;
     }
 
@@ -49,13 +57,27 @@ public class CartServiceImpl implements CartService {
     @Override
     public CartDto getCart() {
         List<Item> items = itemRepository.findItemsInCart();
-        return new CartDto(items.stream().map(itemMapper::toDto).toList(), items.stream()
-                .mapToInt(it -> it.getAmountInCart() * it.getPrice()).sum());
+        return new CartDto(items.stream().map(itemMapper::toDto).toList(), calculateTotalPrice(items));
+    }
+
+    private int calculateTotalPrice(List<Item> items) {
+        return items.stream().mapToInt(it -> it.getAmountInCart() * it.getPrice()).sum();
     }
 
     @Override
+    @Transactional
     public Long buy() {
-        return 1L;
+        List<Item> items = itemRepository.findItemsInCart();
+        if (items.isEmpty()) {
+            ShopException.throwCartIsEmpty();
+        }
+        Order order = new Order(calculateTotalPrice(items));
+        List<OrderItem> orderItems = items.stream()
+                .map(item -> new OrderItem(order, item)).toList();
+        order.setOrderItems(orderItems);
+        Order createdOrder = orderRepository.save(order);
+        itemRepository.clearCart();
+        return createdOrder.getId();
     }
 
     private void increaseAmountInCart(Item item) {
