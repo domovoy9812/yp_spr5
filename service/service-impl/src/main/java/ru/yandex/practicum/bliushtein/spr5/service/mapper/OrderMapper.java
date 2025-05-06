@@ -17,9 +17,9 @@ public class OrderMapper implements Mapper<Order, OrderDto> {
     }
 
     private OrderItemDto mapOrderItem(OrderItem orderItem) {
-        return new OrderItemDto(orderItem.getItem().getId(),
-                orderItem.getItem().getName(),
-                orderItem.getItem().getDescription(),
+        return new OrderItemDto(orderItem.getItemId(),
+                orderItem.getItemName(),
+                orderItem.getItemDescription(),
                 orderItem.getPrice(),
                 orderItem.getAmount());
     }

@@ -13,9 +13,14 @@ public class OrderItem {
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
-    @ManyToOne
-    @JoinColumn(name = "item_id", nullable = false)
-    private Item item;
+    @Column(nullable = false)
+    private Long itemId;
+
+    @Column(nullable = false)
+    private String itemName;
+
+    @Column(nullable = false)
+    private String itemDescription;
 
     @Column(nullable = false)
     private int price;
@@ -28,7 +33,9 @@ public class OrderItem {
 
     public OrderItem(Order order, Item item) {
         this.order = order;
-        this.item = item;
+        this.itemId = item.getId();
+        this.itemName = item.getName();
+        this.itemDescription = item.getDescription();
         this.price = item.getPrice();
         this.amount = item.getAmountInCart();
     }
@@ -54,12 +61,28 @@ public class OrderItem {
         this.order = order;
     }
 
-    public Item getItem() {
-        return item;
+    public Long getItemId() {
+        return itemId;
     }
 
-    public void setItem(Item item) {
-        this.item = item;
+    public void setItemId(Long itemId) {
+        this.itemId = itemId;
+    }
+
+    public String getItemName() {
+        return itemName;
+    }
+
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
+    }
+
+    public String getItemDescription() {
+        return itemDescription;
+    }
+
+    public void setItemDescription(String itemDescription) {
+        this.itemDescription = itemDescription;
     }
 
     public int getPrice() {

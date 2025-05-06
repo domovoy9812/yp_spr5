@@ -14,6 +14,7 @@ public class TestData {
             3);
     public static final int ITEM_1_AND_ITEM_2_TOTAL_PRICE = ITEM_1.getPrice() * ITEM_1.getAmountInCart()
             + ITEM_2.getPrice() * ITEM_2.getAmountInCart();
+    public static final int ITEM_1_TOTAL_PRICE = ITEM_1.getPrice() * ITEM_1.getAmountInCart();
     public static final Item ITEM_NOT_IN_CART = new Item(1L, "name", "description", 100,
             ITEM_AMOUNT_IN_CART_0);
     public static final Order CREATED_ORDER = new Order(1L, List.of(), 10);

@@ -129,16 +129,21 @@ public class CartServiceImplTest {
     @Test
     void test_buy() {
         when(itemRepositoryMock.findItemsInCart())
-                .thenReturn(List.of(ITEM_1, ITEM_2));
+                .thenReturn(List.of(ITEM_1));
         when(orderRepositoryMock.save(any())).thenReturn(CREATED_ORDER);
         Long orderId = cartService.buy();
         assertEquals(CREATED_ORDER.getId(), orderId);
         ArgumentCaptor<Order> orderCaptor = ArgumentCaptor.forClass(Order.class);
         verify(orderRepositoryMock).save(orderCaptor.capture());
         Order order = orderCaptor.getValue();
-        assertEquals(ITEM_1_AND_ITEM_2_TOTAL_PRICE, order.getTotalPrice());
-        List<Item> itemsInOrder = order.getOrderItems().stream().map(OrderItem::getItem).toList();
-        assertTrue(itemsInOrder.containsAll(List.of(ITEM_1, ITEM_2)));
+        assertEquals(ITEM_1_TOTAL_PRICE, order.getTotalPrice());
+        assertEquals(1, order.getOrderItems().size());
+        OrderItem orderItem = order.getOrderItems().getFirst();
+        assertEquals(ITEM_1.getId(), orderItem.getItemId());
+        assertEquals(ITEM_1.getName(), orderItem.getItemName());
+        assertEquals(ITEM_1.getDescription(), orderItem.getItemDescription());
+        assertEquals(ITEM_1.getPrice(), orderItem.getPrice());
+        assertEquals(ITEM_1.getAmountInCart(), orderItem.getAmount());
         verify(itemRepositoryMock).clearCart();
     }
 
