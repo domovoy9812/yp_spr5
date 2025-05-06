@@ -6,35 +6,33 @@
 </head>
 
 <body>
-<!-- В href ссылка на корзину -->
-<a href="..." style="float:right;">
-    <b>КОРЗИНА &cudarrr;</b>
+<a th:href="@{/cart}" style="float:right;">
+    <b>[КОРЗИНА]</b>
 </a>
-<!-- В href ссылка на главную страницу -->
-<a href="..." style="float:right;">
-    <b>ГЛАВНАЯ &cudarrr;</b>
+<a th:href="@{/main}" style="float:right;">
+    <b>[ГЛАВНАЯ]</b>
 </a>
 <table style="width:70%;margin-left:auto;margin-right:auto;">
-    <!-- Итерируемся по заказам -->
-    <tr th:each="...">
+    <tr th:each="order : ${orders}">
         <td>
             <h2>
-            	<!--
-            		В text номер заказа.
-            		В href ссылка на страницу заказа. 
-            	-->
-                <a th:text="..." th:href="..."></a>
+                <a th:text="${'Номер заказа: ' + order.id}" th:href="@{/order/{id}(id=${order.id})}"></a>
             </h2>
             <table>
-                <!-- Итерируемся по товарам в заказе -->
-                <tr th:each="...">
-                    <!-- В text название товара, количество штук и стоимость -->
-                    <td th:text="..."></td>
+                <tr th:each="orderItem : ${order.orderItems}">
+                    <td>
+                        <b th:text="${'Название товара: ' + orderItem.name}"></b>
+                    </td>
+                    <td>
+                        <b th:text="${'Цена товара: ' + orderItem.price}"></b>
+                    </td>
+                    <td>
+                        <b th:text="${'Количество: ' + orderItem.amount}"></b>
+                    </td>
                 </tr>
             </table>
             <p>
-                <!-- В text общая сумма заказа -->
-                <b th:text="..."></b>
+                <b th:text="${'Сумма заказа: ' + order.totalPrice}"></b>
             </p>
         </td>
     </tr>
