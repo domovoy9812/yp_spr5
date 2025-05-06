@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.yandex.practicum.bliushtein.spr5.data.entity.Item;
 import ru.yandex.practicum.bliushtein.spr5.data.repository.ItemRepository;
+import ru.yandex.practicum.bliushtein.spr5.service.ShopException;
 import ru.yandex.practicum.bliushtein.spr5.service.dto.ItemDto;
 import ru.yandex.practicum.bliushtein.spr5.service.ItemService;
 import ru.yandex.practicum.bliushtein.spr5.service.mapper.ItemMapper;
@@ -26,6 +27,9 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public ItemDto createItem(String name, String description, int price) {
+        if (price <= 0) {
+            ShopException.throwPriceShouldBePositive(price);
+        }
         Item item = itemRepository.save(new Item(name, description, price, 0));
         return itemMapper.toDto(item);
     }

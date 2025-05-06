@@ -40,7 +40,7 @@ public class ItemController {
     @GetMapping("/generate")
     public String generateItems(Model model) {
         ItemDto item = null;
-        for(int i = 0; i < 20; i++) {
+        for(int i = 1; i < 20; i++) {
             item = itemService.createItem("name %d".formatted(i), "description %d".formatted(i), i);
         }
         return "redirect:/item/%d".formatted(item.id());

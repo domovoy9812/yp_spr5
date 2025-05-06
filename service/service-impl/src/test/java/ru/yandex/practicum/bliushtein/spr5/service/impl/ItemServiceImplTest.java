@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import ru.yandex.practicum.bliushtein.spr5.data.repository.ItemRepository;
+import ru.yandex.practicum.bliushtein.spr5.service.ShopException;
 import ru.yandex.practicum.bliushtein.spr5.service.dto.ItemDto;
 import ru.yandex.practicum.bliushtein.spr5.service.ItemService;
 import ru.yandex.practicum.bliushtein.spr5.service.mapper.ItemMapper;
@@ -47,8 +48,12 @@ public class ItemServiceImplTest {
 
     @Test
     void test_findItemById_NullItemId() {
-        assertThrows(NullPointerException.class, () -> itemService.findItemById(null).isPresent());
+        assertThrows(NullPointerException.class, () -> itemService.findItemById(null));
         verify(itemRepository, never()).findById(any());
     }
 
+    @Test
+    void test_createItem_priceShouldBePositive() {
+        assertThrows(ShopException.class, () -> itemService.createItem(ITEM_1.getName(), ITEM_1.getDescription(), 0));
+    }
 }
