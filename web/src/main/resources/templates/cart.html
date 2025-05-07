@@ -18,8 +18,7 @@
             <table>
                 <tr>
                     <td>
-                        <!-- В src ссылка изображение товара -->
-                        <!--img width="300" height="300" th:src="..."-->
+                        <img width="150" height="150" th:src="@{/image/{imageId}(imageId=${item.imageId})}"/>
                     </td>
                 </tr>
                 <tr>

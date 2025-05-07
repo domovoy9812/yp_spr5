@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.*;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import ru.yandex.practicum.bliushtein.spr5.data.repository.ImageRepository;
 import ru.yandex.practicum.bliushtein.spr5.data.repository.ItemRepository;
 import ru.yandex.practicum.bliushtein.spr5.service.ItemSort;
 import ru.yandex.practicum.bliushtein.spr5.service.ShopException;
@@ -30,6 +31,9 @@ public class ItemServiceImplTest {
 
     @MockitoBean
     ItemRepository itemRepository;
+
+    @MockitoBean
+    ImageRepository imageRepository;
 
     @Test
     void test_findItemById() {
@@ -58,7 +62,7 @@ public class ItemServiceImplTest {
 
     @Test
     void test_createItem_priceShouldBePositive() {
-        assertThrows(ShopException.class, () -> itemService.createItem(ITEM_1.getName(), ITEM_1.getDescription(), 0));
+        assertThrows(ShopException.class, () -> itemService.createItem(ITEM_1.getName(), ITEM_1.getDescription(), 0, null));
     }
 
     @Test

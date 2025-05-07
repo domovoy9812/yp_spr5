@@ -2,6 +2,8 @@ package ru.yandex.practicum.bliushtein.spr5.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -9,6 +11,8 @@ import ru.yandex.practicum.bliushtein.spr5.service.CartService;
 import ru.yandex.practicum.bliushtein.spr5.service.ItemService;
 import ru.yandex.practicum.bliushtein.spr5.service.ShopException;
 import ru.yandex.practicum.bliushtein.spr5.service.dto.ItemDto;
+
+import java.io.IOException;
 
 @Controller
 @RequestMapping("/item")
@@ -38,12 +42,16 @@ public class ItemController {
         return "redirect:" + request.getHeader("Referer");
     }
 
+    @Value("classpath:image/default_image.png")
+    Resource defaultImage;
+
     //TODO rework
     @GetMapping("/generate")
-    public String generateItems(Model model) {
+    public String generateItems(Model model) throws IOException {
         ItemDto item = null;
         for(int i = 1; i < 20; i++) {
-            item = itemService.createItem("name %d".formatted(i), "description %d".formatted(i), 30 - i);
+            item = itemService.createItem("name %d".formatted(i), "description %d".formatted(i), 30 - i,
+                    defaultImage.getContentAsByteArray());
         }
         return "redirect:/item/%d".formatted(item.id());
     }

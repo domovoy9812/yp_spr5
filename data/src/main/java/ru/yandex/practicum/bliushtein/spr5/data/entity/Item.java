@@ -19,18 +19,30 @@ public class Item {
     @Column(nullable = false)
     private int amountInCart;
 
-    public Item() { }
+    private Long imageId;
+
+    public Item() {
+    }
 
     public Item(String name, String description, int price, int amountInCart) {
+        this(null, name, description, price, amountInCart);
+    }
+
+    public Item(Long id, String name, String description, int price, int amountInCart) {
+        this(id, name, description, price, amountInCart, null);
+    }
+
+    public Item(String name, String description, int price, int amountInCart, Long imageId) {
+        this(null, name, description, price, amountInCart, imageId);
+    }
+
+    public Item(Long id, String name, String description, int price, int amountInCart, Long imageId) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.amountInCart = amountInCart;
-    }
-
-    public Item(Long id, String name, String description, int price, int amountInCart) {
-        this(name, description, price, amountInCart);
         this.id = id;
+        this.imageId = imageId;
     }
 
     public Long getId() {
@@ -71,5 +83,13 @@ public class Item {
 
     public void setAmountInCart(int amountInCart) {
         this.amountInCart = amountInCart;
+    }
+
+    public Long getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(Long imageId) {
+        this.imageId = imageId;
     }
 }

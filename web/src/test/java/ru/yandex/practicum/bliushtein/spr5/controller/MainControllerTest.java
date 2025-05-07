@@ -28,7 +28,6 @@ public class MainControllerTest {
 
     @Test
     void test_searchItems() throws Exception {
-        //when(itemServiceMock.searchItems("name 1", 0, 5, ItemSort.NO)).thenReturn(new PagedItemsDto(List.of(ITEM_DTO), true, true));
         when(itemServiceMock.searchItems(null, 0, 5, ItemSort.NO)).thenReturn(new PagedItemsDto(List.of(ITEM_DTO), true, true));
         mockMvc.perform(get("/main"))
                 .andExpect(status().isOk());

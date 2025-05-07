@@ -22,4 +22,5 @@ public class ShopException extends RuntimeException {
     public static void throwPriceShouldBePositive(int price) {
         throw new ShopException(PRICE_SHOULD_BE_POSITIVE_ERROR_MESSAGE.formatted(price));
     }
+
 }

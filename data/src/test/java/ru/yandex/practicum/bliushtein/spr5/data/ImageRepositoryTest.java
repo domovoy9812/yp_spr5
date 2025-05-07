@@ -6,11 +6,13 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
-import ru.yandex.practicum.bliushtein.spr5.data.repository.OrderRepository;
+import ru.yandex.practicum.bliushtein.spr5.data.entity.Image;
+import ru.yandex.practicum.bliushtein.spr5.data.repository.ImageRepository;
 
-//TODO check why extends AbstractJpaTestWithTestcontainers doesn't work
-public class OrderRepositoryTest extends AbstractJpaTestWithTestcontainers {
+import java.util.Optional;
+import static org.junit.jupiter.api.Assertions.*;
 
+public class ImageRepositoryTest extends AbstractJpaTestWithTestcontainers {
     @Container
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:17");
 
@@ -22,9 +24,18 @@ public class OrderRepositoryTest extends AbstractJpaTestWithTestcontainers {
     }
 
     @Autowired
-    OrderRepository orderRepository;
+    ImageRepository imageRepository;
 
     @Test
     void contextLoads() {
+    }
+
+    @Test
+    void test_saveAndGet() {
+        byte[] imageData = {1,2,3};
+        Image savedImage = imageRepository.save(new Image(imageData));
+        Optional<Image> image = imageRepository.findById(savedImage.getId());
+        assertTrue(image.isPresent());
+        assertArrayEquals(imageData, image.get().getImage());
     }
 }

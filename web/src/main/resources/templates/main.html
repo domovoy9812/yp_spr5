@@ -52,16 +52,16 @@
                 <table>
                     <tr>
                         <td>
-                            <a th:href="@{/item/{id}(id=${item.id})}" th:text="${'Название: ' + item.name}">
+                            <a th:href="@{/item/{id}(id=${item.id})}"> <!-- th:text="${'Название: ' + item.name}"-->
                                 <!-- В src ссылка изображение товара -->
-                                <!--img width="300" height="300" th:src="..."-->
+                                <img width="150" height="150" th:src="@{/image/{imageId}(imageId=${item.imageId})}"/>
                             </a>
                         </td>
                     </tr>
                     <tr>
-                        <!--td>
-                            <b th:text="${item.name}"></b>
-                        </td-->
+                        <td>
+                            <b th:text="${'Название: ' + item.name}"></b>
+                        </td>
                         <td>
                             <b th:text="${'Цена: ' + item.price}"></b>
                         </td>

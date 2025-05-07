@@ -8,7 +8,9 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.yandex.practicum.bliushtein.spr5.data.entity.Image;
 import ru.yandex.practicum.bliushtein.spr5.data.entity.Item;
+import ru.yandex.practicum.bliushtein.spr5.data.repository.ImageRepository;
 import ru.yandex.practicum.bliushtein.spr5.data.repository.ItemRepository;
 import ru.yandex.practicum.bliushtein.spr5.service.ItemSort;
 import ru.yandex.practicum.bliushtein.spr5.service.ShopException;
@@ -24,19 +26,31 @@ import java.util.Optional;
 public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
+    private final ImageRepository imageRepository;
     private final ItemMapper itemMapper;
-    public ItemServiceImpl(@Autowired ItemRepository itemRepository, @Autowired ItemMapper itemMapper) {
+    public ItemServiceImpl(@Autowired ItemRepository itemRepository,
+                           @Autowired ImageRepository imageRepository,
+                           @Autowired ItemMapper itemMapper) {
         this.itemRepository = itemRepository;
+        this.imageRepository = imageRepository;
         this.itemMapper = itemMapper;
     }
 
     @Override
     @Transactional
-    public ItemDto createItem(String name, String description, int price) {
+    public ItemDto createItem(String name, String description, int price, byte[] image) {
         if (price <= 0) {
             ShopException.throwPriceShouldBePositive(price);
         }
-        Item item = itemRepository.save(new Item(name, description, price, 0));
+        Long imageId;
+        if (image == null) {
+            imageId = null;
+        } else {
+            Image storedImage = imageRepository.save(new Image(image));
+            imageId = storedImage.getId();
+        }
+        Item item = itemRepository.save(new Item(name, description, price, 0, imageId));
+
         return itemMapper.toDto(item);
     }
 

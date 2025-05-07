@@ -9,7 +9,7 @@ public class ItemMapper implements Mapper<Item, ItemDto> {
     @Override
     public ItemDto toDto(Item item) {
         return new ItemDto(item.getId(), item.getName(), item.getDescription(), item.getPrice(),
-                item.getAmountInCart());
+                item.getAmountInCart(), item.getImageId());
     }
 
 }
