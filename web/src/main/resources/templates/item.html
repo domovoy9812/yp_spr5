@@ -28,7 +28,7 @@
             <span th:text="${'Описание товара: ' + item.description}"></span>
         </p>
         <form th:action="@{/item/{id}/changeAmountInCart(id=${item.id})}" method="post">
-            <button name="action" value="minus">-</button>
+            <button th:if="${item.amountInCart > 0}" name="action" value="minus">-</button>
             <span th:text="${item.amountInCart}"></span>
             <button name="action" value="plus">+</button>
             <button name="action" value="plus" th:if="${item.amountInCart == 0}" style="float:right;">В корзину</button>

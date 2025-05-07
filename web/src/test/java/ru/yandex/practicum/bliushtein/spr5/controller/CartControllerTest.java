@@ -48,33 +48,6 @@ public class CartControllerTest {
     }
 
     @Test
-    void test_changeItemAmount_plus() throws Exception {
-        mockMvc.perform(post("/cart/{itemId}/changeItemAmount", ITEM_DTO.id())
-                        .param("action", "plus"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/cart"));
-        verify(cartServiceMock).increaseAmountInCart(ITEM_DTO.id());
-    }
-
-    @Test
-    void test_changeItemAmount_minus() throws Exception {
-        mockMvc.perform(post("/cart/{itemId}/changeItemAmount", ITEM_DTO.id())
-                        .param("action", "minus"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/cart"));
-        verify(cartServiceMock).decreaseAmountInCart(ITEM_DTO.id());
-    }
-
-    @Test
-    void test_changeItemAmount_delete() throws Exception {
-        mockMvc.perform(post("/cart/{itemId}/changeItemAmount", ITEM_DTO.id())
-                        .param("action", "delete"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/cart"));
-        verify(cartServiceMock).removeFromCart(ITEM_DTO.id());
-    }
-
-    @Test
     void test_buy() throws Exception {
         when(cartServiceMock.buy()).thenReturn(ORDER_ID);
         mockMvc.perform(post("/cart/buy"))

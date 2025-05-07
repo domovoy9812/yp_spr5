@@ -5,7 +5,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.bliushtein.spr5.service.CartService;
-import ru.yandex.practicum.bliushtein.spr5.service.ShopException;
 import ru.yandex.practicum.bliushtein.spr5.service.dto.CartDto;
 
 @Controller
@@ -21,18 +20,6 @@ public class CartController {
     public String getCart(Model model) {
         loadCartToModel(model);
         return "cart";
-    }
-
-    @PostMapping("/{itemId}/changeItemAmount")
-    public String changeItemAmount(@PathVariable("itemId") Long itemId,
-                                   @RequestParam("action") String action) {
-        switch (action) {
-            case "plus" -> cartService.increaseAmountInCart(itemId);
-            case "minus" -> cartService.decreaseAmountInCart(itemId);
-            case "delete" -> cartService.removeFromCart(itemId);
-            default -> throw new ShopException("Incorrect action value %s".formatted(action));
-        }
-        return "redirect:/cart";
     }
 
     @PostMapping("/buy")

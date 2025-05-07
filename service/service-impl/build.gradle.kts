@@ -32,6 +32,7 @@ dependencies {
 
 	implementation("org.springframework.boot:spring-boot-autoconfigure")
 	implementation("org.springframework.data:spring-data-jpa")
+	implementation("org.apache.commons:commons-lang3")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }

@@ -1,5 +1,6 @@
 package ru.yandex.practicum.bliushtein.spr5.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,13 +28,14 @@ public class ItemController {
     }
 
     @PostMapping("/{id}/changeAmountInCart")
-    public String changeAmountInCart(@PathVariable("id") Long id, @RequestParam("action") String action) {
+    public String changeAmountInCart(HttpServletRequest request, @PathVariable("id") Long id, @RequestParam("action") String action) {
         switch (action) {
             case "plus" -> cartService.increaseAmountInCart(id);
             case "minus" -> cartService.decreaseAmountInCart(id);
+            case "delete" -> cartService.removeFromCart(id);
             default -> throw new ShopException("Incorrect action value %s".formatted(action));
         }
-        return "redirect:/item/" + id;
+        return "redirect:" + request.getHeader("Referer");
     }
 
     //TODO rework
@@ -41,7 +43,7 @@ public class ItemController {
     public String generateItems(Model model) {
         ItemDto item = null;
         for(int i = 1; i < 20; i++) {
-            item = itemService.createItem("name %d".formatted(i), "description %d".formatted(i), i);
+            item = itemService.createItem("name %d".formatted(i), "description %d".formatted(i), 30 - i);
         }
         return "redirect:/item/%d".formatted(item.id());
     }

@@ -36,8 +36,8 @@
                 <tr>
                     <td>
 
-                        <form th:action="@{/cart/{itemId}/changeItemAmount(itemId=${item.id})}" method="post">
-                            <button name="action" value="minus">-</button>
+                        <form th:action="@{/item/{id}/changeAmountInCart(id=${item.id})}" method="post">
+                            <button th:if="${item.amountInCart > 0}" name="action" value="minus">-</button>
                             <span th:text="${item.amountInCart}"></span>
                             <button name="action" value="plus">+</button>
                             <button name="action" value="delete" style="float:right;">x</button>
