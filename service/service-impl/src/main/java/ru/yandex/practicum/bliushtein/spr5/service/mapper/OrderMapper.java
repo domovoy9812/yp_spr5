@@ -21,6 +21,7 @@ public class OrderMapper implements Mapper<Order, OrderDto> {
                 orderItem.getItemName(),
                 orderItem.getItemDescription(),
                 orderItem.getPrice(),
-                orderItem.getAmount());
+                orderItem.getAmount(),
+                orderItem.getImageId());
     }
 }

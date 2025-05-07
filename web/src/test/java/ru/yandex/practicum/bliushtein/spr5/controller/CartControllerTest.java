@@ -52,6 +52,6 @@ public class CartControllerTest {
         when(cartServiceMock.buy()).thenReturn(ORDER_ID);
         mockMvc.perform(post("/cart/buy"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/order/" + ORDER_ID));
+                .andExpect(redirectedUrl("/order/" + ORDER_ID + "/new"));
     }
 }

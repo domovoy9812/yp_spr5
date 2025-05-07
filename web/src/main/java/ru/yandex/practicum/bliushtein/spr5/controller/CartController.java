@@ -25,7 +25,7 @@ public class CartController {
     @PostMapping("/buy")
     public String buy() {
         Long orderId = cartService.buy();
-        return "redirect:/order/" + orderId;
+        return "redirect:/order/" + orderId + "/new";
     }
 
     private void loadCartToModel(Model model) {

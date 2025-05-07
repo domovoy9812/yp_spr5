@@ -28,6 +28,8 @@ public class OrderItem {
     @Column(nullable = false)
     private int amount;
 
+    private Long imageId;
+
     public OrderItem() {
     }
 
@@ -38,6 +40,7 @@ public class OrderItem {
         this.itemDescription = item.getDescription();
         this.price = item.getPrice();
         this.amount = item.getAmountInCart();
+        this.imageId = item.getImageId();
     }
 
     public OrderItem(Long id, Order order, Item item) {
@@ -99,5 +102,13 @@ public class OrderItem {
 
     public void setAmount(int amount) {
         this.amount = amount;
+    }
+
+    public Long getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(Long imageId) {
+        this.imageId = imageId;
     }
 }
