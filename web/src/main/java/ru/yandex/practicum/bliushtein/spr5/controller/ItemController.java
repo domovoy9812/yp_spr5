@@ -4,9 +4,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.yandex.practicum.bliushtein.spr5.service.CartService;
 import ru.yandex.practicum.bliushtein.spr5.service.ItemService;
 import ru.yandex.practicum.bliushtein.spr5.service.ShopException;
@@ -45,14 +47,28 @@ public class ItemController {
     @Value("classpath:image/default_image.png")
     Resource defaultImage;
 
+    @GetMapping("/new")
+    public String showNewItemPage() {
+        return "new-item";
+    }
+
+    @PostMapping(value = "/create", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    public String createItem(@RequestParam("name") String name,
+                             @RequestParam("description") String description,
+                             @RequestParam("price") int price,
+                             @RequestPart("image") MultipartFile image) throws IOException {
+        ItemDto item = itemService.createItem(name, description, price, image.getBytes());
+        return "redirect:/item/" + item.id();
+    }
+
     //TODO rework
     @GetMapping("/generate")
-    public String generateItems(Model model) throws IOException {
+    public String generateItems() throws IOException {
         ItemDto item = null;
         for(int i = 1; i < 20; i++) {
             item = itemService.createItem("name %d".formatted(i), "description %d".formatted(i), 30 - i,
                     defaultImage.getContentAsByteArray());
         }
-        return "redirect:/item/%d".formatted(item.id());
+        return "redirect:/main";
     }
 }
