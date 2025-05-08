@@ -61,7 +61,7 @@ public class ItemController {
         return "redirect:/item/" + item.id();
     }
 
-    //TODO rework
+    //To create test data quickly
     @GetMapping("/generate")
     public String generateItems() throws IOException {
         ItemDto item = null;

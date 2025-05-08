@@ -5,10 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import ru.yandex.practicum.bliushtein.spr5.data.entity.Item;
 import ru.yandex.practicum.bliushtein.spr5.data.repository.ItemRepository;
 
@@ -18,15 +14,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static ru.yandex.practicum.bliushtein.spr5.data.TestData.*;
 
 public class ItemRepositoryTest extends AbstractJpaTestWithTestcontainers {
-    @Container
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:17");
-
-    @DynamicPropertySource
-    static void configureProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgres::getJdbcUrl);
-        registry.add("spring.datasource.username", postgres::getUsername);
-        registry.add("spring.datasource.password", postgres::getPassword);
-    }
 
     @Autowired
     ItemRepository itemRepository;

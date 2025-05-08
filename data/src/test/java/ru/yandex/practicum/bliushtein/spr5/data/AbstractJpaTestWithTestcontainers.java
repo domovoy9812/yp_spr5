@@ -5,23 +5,27 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.testcontainers.junit.jupiter.Testcontainers;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.PostgreSQLContainer;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Testcontainers
 @ContextConfiguration(classes = DataAutoConfiguration.class)
 @ActiveProfiles("test")
 @EnableAutoConfiguration
 abstract class AbstractJpaTestWithTestcontainers {
 
-	/*@Container
-	static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:17");
+	static PostgreSQLContainer<?> postgres;
+	static  {
+		postgres = new PostgreSQLContainer<>("postgres:17")/*.withReuse(true)*/;
+		postgres.start();
+	}
 
 	@DynamicPropertySource
 	static void configureProperties(DynamicPropertyRegistry registry) {
 		registry.add("spring.datasource.url", postgres::getJdbcUrl);
 		registry.add("spring.datasource.username", postgres::getUsername);
 		registry.add("spring.datasource.password", postgres::getPassword);
-	}*/
+	}
 }
