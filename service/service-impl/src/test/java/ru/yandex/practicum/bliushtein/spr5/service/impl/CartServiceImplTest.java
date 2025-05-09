@@ -147,7 +147,6 @@ public class CartServiceImplTest {
         verify(itemRepositoryMock).clearCart();
     }
 
-    //TODO add integration test to test transaction rollback
     @Test
     void test_buy_emptyCart() {
         when(itemRepositoryMock.findItemsInCart())

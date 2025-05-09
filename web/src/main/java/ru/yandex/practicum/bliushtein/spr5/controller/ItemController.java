@@ -21,10 +21,14 @@ import java.io.IOException;
 public class ItemController {
     private final ItemService itemService;
     private final CartService cartService;
+    private final Resource defaultImage;
 
-    public ItemController(@Autowired ItemService itemService, @Autowired CartService cartService) {
+    public ItemController(@Autowired ItemService itemService,
+                          @Autowired CartService cartService,
+                          @Value("classpath:image/default_image.png") Resource defaultImage) {
         this.itemService = itemService;
         this.cartService = cartService;
+        this.defaultImage = defaultImage;
     }
 
     @GetMapping("/{id}")
@@ -43,9 +47,6 @@ public class ItemController {
         }
         return "redirect:" + request.getHeader("Referer");
     }
-
-    @Value("classpath:image/default_image.png")
-    Resource defaultImage;
 
     @GetMapping("/new")
     public String showNewItemPage() {

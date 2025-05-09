@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Ошибка</title>
+</head>
+
+<body>
+<a th:href="@{/orders}" style="float:right;">
+    <b>[ЗАКАЗЫ]</b>
+</a>
+<a th:href="@{/cart}" style="float:right;">
+    <b>[КОРЗИНА]</b>
+</a>
+<a th:href="@{/main}" style="float:right;">
+    <b>[ГЛАВНАЯ]</b>
+</a>
+<h1>При выполнении запроса произошла ошибка</h1>
+<p th:text="${'Класс: ' + exClass}"></p>
+<p th:text="${'Сообщение об ошибке: ' + exMessage}"></p>
+<p>Стектрейс:</p>
+<p th:each="traceElement : ${exStackTrace}" th:text="${traceElement}"></p>
+</body>
+
+</html>

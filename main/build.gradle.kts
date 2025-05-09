@@ -28,8 +28,10 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-testcontainers")
 	testImplementation("org.testcontainers:junit-jupiter")
 	testImplementation("org.testcontainers:postgresql")
+	testImplementation("org.springframework.boot:spring-boot-starter-web")
+	testImplementation(project(":data"))
+	testImplementation("org.springframework.data:spring-data-jpa")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-
 	developmentOnly("org.springframework.boot:spring-boot-docker-compose")
 }
 

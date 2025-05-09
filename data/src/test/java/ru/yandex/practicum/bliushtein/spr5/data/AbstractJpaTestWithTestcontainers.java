@@ -18,7 +18,7 @@ abstract class AbstractJpaTestWithTestcontainers {
 
 	static PostgreSQLContainer<?> postgres;
 	static  {
-		postgres = new PostgreSQLContainer<>("postgres:17")/*.withReuse(true)*/;
+		postgres = new PostgreSQLContainer<>("postgres:17");
 		postgres.start();
 	}
 
