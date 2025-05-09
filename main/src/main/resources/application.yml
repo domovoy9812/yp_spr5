@@ -15,13 +15,16 @@ spring:
   application:
     name: bliushtein_sprint5
   datasource:
+    url: jdbc:postgresql://localhost:5432/bliushtein_yp_sprint5_db
+    username: bliushtein_yp_sprint5
+    password: 12345
     driver-class-name: org.postgresql.Driver
   jpa:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         hbm2ddl:
-          auto: create
+          auto: update
 logging:
   level:
     ru.yandex.practicum.bliushtein.spr5: "debug"

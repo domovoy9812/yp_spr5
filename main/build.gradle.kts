@@ -32,7 +32,7 @@ dependencies {
 	testImplementation(project(":data"))
 	testImplementation("org.springframework.data:spring-data-jpa")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-	developmentOnly("org.springframework.boot:spring-boot-docker-compose")
+	//developmentOnly("org.springframework.boot:spring-boot-docker-compose")
 }
 
 tasks.withType<Test> {
