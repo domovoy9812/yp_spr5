@@ -14,11 +14,14 @@ management:
 spring:
   application:
     name: bliushtein_sprint5
-  datasource:
-    url: jdbc:postgresql://localhost:5432/bliushtein_yp_sprint5_db
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/bliushtein_yp_sprint5_db
     username: bliushtein_yp_sprint5
     password: 12345
-    driver-class-name: org.postgresql.Driver
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:/db/schema.sql
   jpa:
     properties:
       hibernate:

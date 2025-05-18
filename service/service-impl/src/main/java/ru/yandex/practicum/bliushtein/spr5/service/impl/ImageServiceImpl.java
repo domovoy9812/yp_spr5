@@ -17,7 +17,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public byte[] getImage(Long id) {
-        return imageRepository.findById(id).map(Image::getImage)
+        return imageRepository.findById(id).blockOptional().map(Image::getImage)
                 .orElseThrow(() -> new ShopException("Image not found for id: %d".formatted(id)));
     }
 }

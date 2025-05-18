@@ -1,7 +1,10 @@
 package ru.yandex.practicum.bliushtein.spr5.data.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.bliushtein.spr5.data.entity.Order;
 
-public interface OrderRepository extends JpaRepository<Order, Long> {
+//TODO merge with OrderItemRepository and rework to use R2DBC Template
+@Repository
+public interface OrderRepository extends ReactiveCrudRepository<Order, Long> {
 }

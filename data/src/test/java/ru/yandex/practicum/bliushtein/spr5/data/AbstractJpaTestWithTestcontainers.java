@@ -1,31 +1,23 @@
 package ru.yandex.practicum.bliushtein.spr5.data;
 
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.test.context.*;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
-@DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ContextConfiguration(classes = DataAutoConfiguration.class)
 @ActiveProfiles("test")
+@ExtendWith(SpringExtension.class)
+@ExtendWith(MockitoExtension.class)
 @EnableAutoConfiguration
+@ContextConfiguration(classes = R2dbcTestConfiguration.class)
+@TestPropertySource("classpath:application-test.yml")
+@Testcontainers
 abstract class AbstractJpaTestWithTestcontainers {
 
-	static PostgreSQLContainer<?> postgres;
-	static  {
-		postgres = new PostgreSQLContainer<>("postgres:17");
-		postgres.start();
-	}
-
-	@DynamicPropertySource
-	static void configureProperties(DynamicPropertyRegistry registry) {
-		registry.add("spring.datasource.url", postgres::getJdbcUrl);
-		registry.add("spring.datasource.username", postgres::getUsername);
-		registry.add("spring.datasource.password", postgres::getPassword);
-	}
+	@ServiceConnection
+	static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:17");
 }

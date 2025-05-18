@@ -1,22 +1,19 @@
 package ru.yandex.practicum.bliushtein.spr5.data.entity;
-import jakarta.persistence.*;
 
-@Entity
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
+
 @Table(name = "items")
 public class Item {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String name;
 
     private String description;
 
-    @Column(nullable = false)
     private int price;
 
-    @Column(nullable = false)
     private int amountInCart;
 
     private Long imageId;

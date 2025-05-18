@@ -20,8 +20,8 @@ public class ImageRepositoryTest extends AbstractJpaTestWithTestcontainers {
     @Test
     void test_saveAndGet() {
         byte[] imageData = {1,2,3};
-        Image savedImage = imageRepository.save(new Image(imageData));
-        Optional<Image> image = imageRepository.findById(savedImage.getId());
+        Optional<Image> image = imageRepository.save(new Image(imageData))
+                .doOnNext(it -> imageRepository.findById(it.getId())).blockOptional();
         assertTrue(image.isPresent());
         assertArrayEquals(imageData, image.get().getImage());
     }

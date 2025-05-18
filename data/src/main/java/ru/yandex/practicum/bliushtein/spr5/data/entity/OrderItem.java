@@ -1,40 +1,25 @@
 package ru.yandex.practicum.bliushtein.spr5.data.entity;
 
-import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
-@Entity
 @Table(name = "order_items")
 public class OrderItem {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "order_id", nullable = false)
-    private Order order;
-
-    @Column(nullable = false)
+    private Long orderId;
     private Long itemId;
-
-    @Column(nullable = false)
     private String itemName;
-
-    @Column(nullable = false)
     private String itemDescription;
-
-    @Column(nullable = false)
     private int price;
-
-    @Column(nullable = false)
     private int amount;
-
     private Long imageId;
 
     public OrderItem() {
     }
 
-    public OrderItem(Order order, Item item) {
-        this.order = order;
+    public OrderItem(Long orderId, Item item) {
+        this.orderId = orderId;
         this.itemId = item.getId();
         this.itemName = item.getName();
         this.itemDescription = item.getDescription();
@@ -43,8 +28,8 @@ public class OrderItem {
         this.imageId = item.getImageId();
     }
 
-    public OrderItem(Long id, Order order, Item item) {
-        this(order, item);
+    public OrderItem(Long id, Long orderId, Item item) {
+        this(orderId, item);
         this.id = id;
     }
 
@@ -56,12 +41,12 @@ public class OrderItem {
         this.id = id;
     }
 
-    public Order getOrder() {
-        return order;
+    public Long getOrderId() {
+        return orderId;
     }
 
-    public void setOrder(Order order) {
-        this.order = order;
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
     }
 
     public Long getItemId() {
