@@ -7,20 +7,39 @@ public class ShopException extends RuntimeException {
     private static final String PRICE_SHOULD_BE_POSITIVE_ERROR_MESSAGE = "Price should be positive. current price: %d";
 
     public static void throwItemNotFound(Long id) {
-        throw new ShopException(ITEM_WITH_ID_D_IS_NOT_FOUND_ERROR_MESSAGE.formatted(id));
+        throw itemNotFound(id);
     }
+
+    public static ShopException itemNotFound(Long id) {
+        return new ShopException(ITEM_WITH_ID_D_IS_NOT_FOUND_ERROR_MESSAGE.formatted(id));
+    }
+
     public static void throwAmountInCartCantBeNegative() {
-        throw new ShopException(AMOUNT_IN_CART_CANT_BE_NEGATIVE_ERROR_MESSAGE);
+        throw amountInCartCantBeNegative();
     }
+
+    public static ShopException amountInCartCantBeNegative() {
+        return new ShopException(AMOUNT_IN_CART_CANT_BE_NEGATIVE_ERROR_MESSAGE);
+    }
+
     public static void throwCartIsEmpty() {
+        throw cartIsEmpty();
+    }
+
+    public static ShopException cartIsEmpty() {
         throw new ShopException(CART_IS_EMPTY_ERROR_MESSAGE);
     }
+
     public ShopException(String message) {
         super(message);
     }
 
     public static void throwPriceShouldBePositive(int price) {
-        throw new ShopException(PRICE_SHOULD_BE_POSITIVE_ERROR_MESSAGE.formatted(price));
+        throw priceShouldBePositive(price);
+    }
+
+    public static ShopException priceShouldBePositive(int price) {
+        return new ShopException(PRICE_SHOULD_BE_POSITIVE_ERROR_MESSAGE.formatted(price));
     }
 
 }

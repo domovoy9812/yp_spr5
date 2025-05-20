@@ -1,11 +1,12 @@
 package ru.yandex.practicum.bliushtein.spr5.service;
 
+import reactor.core.publisher.Mono;
 import ru.yandex.practicum.bliushtein.spr5.service.dto.CartDto;
 
 public interface CartService {
-    void increaseAmountInCart(Long itemId);
-    void decreaseAmountInCart(Long itemId);
-    void removeFromCart(Long itemId);
-    CartDto getCart();
-    Long buy();
+    Mono<Void> increaseAmountInCart(Long itemId);
+    Mono<Void> decreaseAmountInCart(Long itemId);
+    Mono<Void> removeFromCart(Long itemId);
+    Mono<CartDto> getCart();
+    Mono<Long> buy();
 }

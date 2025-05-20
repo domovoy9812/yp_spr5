@@ -2,10 +2,11 @@ package ru.yandex.practicum.bliushtein.spr5.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 import ru.yandex.practicum.bliushtein.spr5.data.entity.Image;
 import ru.yandex.practicum.bliushtein.spr5.data.repository.ImageRepository;
 import ru.yandex.practicum.bliushtein.spr5.service.ShopException;
-import ru.yandex.practicum.bliushtein.spr5.service.dto.ImageService;
+import ru.yandex.practicum.bliushtein.spr5.service.ImageService;
 
 @Service
 public class ImageServiceImpl implements ImageService {
@@ -16,8 +17,9 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public byte[] getImage(Long id) {
-        return imageRepository.findById(id).blockOptional().map(Image::getImage)
-                .orElseThrow(() -> new ShopException("Image not found for id: %d".formatted(id)));
+    public Mono<byte[]> getImage(Long id) {
+        return imageRepository.findById(id)
+                .switchIfEmpty(Mono.error(new ShopException("Image not found for id: %d".formatted(id))))
+                .map(Image::getImage);
     }
 }

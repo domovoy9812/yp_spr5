@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import ru.yandex.practicum.bliushtein.spr5.data.entity.Image;
 import ru.yandex.practicum.bliushtein.spr5.data.entity.Item;
 import ru.yandex.practicum.bliushtein.spr5.data.repository.ImageRepository;
@@ -18,11 +20,6 @@ import ru.yandex.practicum.bliushtein.spr5.service.ItemService;
 import ru.yandex.practicum.bliushtein.spr5.service.dto.PagedItemsDto;
 import ru.yandex.practicum.bliushtein.spr5.service.mapper.ItemMapper;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-
-//TODO restore transaction support
 @Service
 public class ItemServiceImpl implements ItemService {
 
@@ -39,41 +36,38 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    //@Transactional
-    public ItemDto createItem(String name, String description, int price, byte[] image) {
+    @Transactional
+    public Mono<ItemDto> createItem(String name, String description, int price, byte[] imageData) {
         if (price <= 0) {
-            ShopException.throwPriceShouldBePositive(price);
+            return Mono.error(ShopException.priceShouldBePositive(price));
         }
-        Long imageId;
-        if (image == null) {
-            imageId = null;
+        if (imageData == null) {
+            return itemRepository.save(new Item(name, description, price, 0, null)).map(itemMapper::toDto);
         } else {
-            Image storedImage = imageRepository.save(new Image(image)).block();
-            imageId = storedImage.getId();
+            return imageRepository.save(new Image(imageData))
+                    .flatMap(image -> itemRepository.save(
+                            new Item(name, description, price, 0, image.getId())))
+                    .map(itemMapper::toDto);
         }
-        Item item = itemRepository.save(new Item(name, description, price, 0, imageId)).block();
-
-        return itemMapper.toDto(item);
     }
 
     @Override
-    public Optional<ItemDto> findItemById(Long itemId) {
-        Objects.requireNonNull(itemId);
-        return itemRepository.findById(itemId).blockOptional().map(itemMapper::toDto);
+    public Mono<ItemDto> findItemById(Long itemId) {
+        return itemRepository.findById(itemId).map(itemMapper::toDto);
     }
 
     //TODO implement paging correctly
     @Override
-    public PagedItemsDto searchItems(String name, int pageNumber, int pageSize, ItemSort sort) {
-        List<Item> items;
+    public Mono<PagedItemsDto> searchItems(String name, int pageNumber, int pageSize, ItemSort sort) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sort.getColumns()));
+        Flux<Item> itemFlux;
         if (StringUtils.isBlank(name)) {
-            items = itemRepository.findAll().collectList().block();
+            itemFlux = itemRepository.findAll();
         } else {
-            items = itemRepository.findByNameLike("%" + name + "%", pageable).collectList().block();
+            itemFlux = itemRepository.findByNameLike("%" + name + "%", pageable);
         }
-        return new PagedItemsDto(items.stream().map(itemMapper::toDto).toList(),
-                false, false);
+        return itemFlux.map(itemMapper::toDto).collectList()
+                .map(itemDtos -> new PagedItemsDto(itemDtos, false, false));
     }
 
 }

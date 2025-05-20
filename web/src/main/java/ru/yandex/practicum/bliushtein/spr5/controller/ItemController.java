@@ -33,16 +33,16 @@ public class ItemController {
 
     @GetMapping("/{id}")
     public String showItem(Model model, @PathVariable("id") Long id) {
-        itemService.findItemById(id).ifPresent(item -> model.addAttribute("item", item));
+        itemService.findItemById(id).blockOptional().ifPresent(item -> model.addAttribute("item", item));
         return "item";
     }
 
     @PostMapping("/{id}/changeAmountInCart")
     public String changeAmountInCart(HttpServletRequest request, @PathVariable("id") Long id, @RequestParam("action") String action) {
         switch (action) {
-            case "plus" -> cartService.increaseAmountInCart(id);
-            case "minus" -> cartService.decreaseAmountInCart(id);
-            case "delete" -> cartService.removeFromCart(id);
+            case "plus" -> cartService.increaseAmountInCart(id).block();
+            case "minus" -> cartService.decreaseAmountInCart(id).block();
+            case "delete" -> cartService.removeFromCart(id).block();
             default -> throw new ShopException("Incorrect action value %s".formatted(action));
         }
         return "redirect:" + request.getHeader("Referer");
@@ -58,7 +58,7 @@ public class ItemController {
                              @RequestParam("description") String description,
                              @RequestParam("price") int price,
                              @RequestPart("image") MultipartFile image) throws IOException {
-        ItemDto item = itemService.createItem(name, description, price, image.getBytes());
+        ItemDto item = itemService.createItem(name, description, price, image.getBytes()).block();
         return "redirect:/item/" + item.id();
     }
 
@@ -68,7 +68,7 @@ public class ItemController {
         ItemDto item = null;
         for(int i = 1; i < 20; i++) {
             item = itemService.createItem("name %d".formatted(i), "description %d".formatted(i), 30 - i,
-                    defaultImage.getContentAsByteArray());
+                    defaultImage.getContentAsByteArray()).block();
         }
         return "redirect:/main";
     }

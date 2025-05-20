@@ -3,6 +3,7 @@ package ru.yandex.practicum.bliushtein.spr5.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Mono;
 import ru.yandex.practicum.bliushtein.spr5.data.entity.Item;
 import ru.yandex.practicum.bliushtein.spr5.data.entity.Order;
 import ru.yandex.practicum.bliushtein.spr5.data.entity.OrderItem;
@@ -15,9 +16,7 @@ import ru.yandex.practicum.bliushtein.spr5.service.dto.CartDto;
 import ru.yandex.practicum.bliushtein.spr5.service.mapper.ItemMapper;
 
 import java.util.List;
-import java.util.Objects;
 
-//TODO restore transaction support
 @Service
 public class CartServiceImpl implements CartService {
     private final ItemRepository itemRepository;
@@ -35,72 +34,76 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    //@Transactional
-    public void increaseAmountInCart(Long itemId) {
-        Objects.requireNonNull(itemId);
-        itemRepository.findById(itemId).blockOptional().ifPresentOrElse(this::increaseAmountInCart,
-                () -> ShopException.throwItemNotFound(itemId));
+    @Transactional
+    public Mono<Void> increaseAmountInCart(Long itemId) {
+        return itemRepository.findById(itemId)
+                .switchIfEmpty(Mono.error(ShopException.itemNotFound(itemId)))
+                .flatMap(this::increaseAmountInCart);
     }
 
     @Override
-    //@Transactional
-    public void decreaseAmountInCart(Long itemId) {
-        Objects.requireNonNull(itemId);
-        itemRepository.findById(itemId).blockOptional().ifPresentOrElse(this::decreaseAmountInCart,
-                () -> ShopException.throwItemNotFound(itemId));
+    @Transactional
+    public Mono<Void> decreaseAmountInCart(Long itemId) {
+        return itemRepository.findById(itemId)
+                .switchIfEmpty(Mono.error(ShopException.itemNotFound(itemId)))
+                .flatMap(this::decreaseAmountInCart);
     }
 
     @Override
-    //@Transactional
-    public void removeFromCart(Long itemId) {
-        Objects.requireNonNull(itemId);
-        itemRepository.findById(itemId).blockOptional().ifPresentOrElse(this::removeFromCart,
-                () -> ShopException.throwItemNotFound(itemId));
+    @Transactional
+    public Mono<Void> removeFromCart(Long itemId) {
+        return itemRepository.findById(itemId)
+                .switchIfEmpty(Mono.error(ShopException.itemNotFound(itemId)))
+                .flatMap(this::removeFromCart);
     }
 
     @Override
-    public CartDto getCart() {
-        List<Item> items = itemRepository.findItemsInCart().collectList().block();
-        return new CartDto(items.stream().map(itemMapper::toDto).toList(), calculateTotalPrice(items));
-    }
-
-    private int calculateTotalPrice(List<Item> items) {
-        return items.stream().mapToInt(it -> it.getAmountInCart() * it.getPrice()).sum();
+    public Mono<CartDto> getCart() {
+        return itemRepository.findItemsInCart().map(itemMapper::toDto).collectList().map(CartDto::new);
     }
 
     @Override
-    //@Transactional
-    public Long buy() {
-        List<Item> items = itemRepository.findItemsInCart().collectList().block();
+    @Transactional
+    public Mono<Long> buy() {
+        return itemRepository.findItemsInCart()
+                .collectList().flatMap(this::createOrder);
+    }
+
+    private Mono<Long> createOrder(List<Item> items) {
         if (items.isEmpty()) {
-            ShopException.throwCartIsEmpty();
+            return Mono.error(ShopException.cartIsEmpty());
         }
-        Order order = new Order(calculateTotalPrice(items));
-        Order createdOrder = orderRepository.save(order).block();
-        List<OrderItem> orderItems = items.stream()
-                .map(item -> new OrderItem(createdOrder.getId(), item)).toList();
-        orderItemRepository.saveAll(orderItems).blockLast();
-        itemRepository.clearCart().block();
-        return createdOrder.getId();
+        return orderRepository.save(new Order(items))
+                .flatMap(order -> this.saveOrderItems(order.getId(), items));
     }
 
-    private void increaseAmountInCart(Item item) {
+    private Mono<Long> saveOrderItems(Long orderId, List<Item> items) {
+        return orderItemRepository.saveAll(createOrderItems(items, orderId))
+                .then(itemRepository.clearCart())
+                .then(Mono.just(orderId));
+    }
+
+    private List<OrderItem> createOrderItems(List<Item> items, Long orderId) {
+        return items.stream().map(item -> new OrderItem(orderId, item)).toList();
+    }
+
+    private Mono<Void> increaseAmountInCart(Item item) {
         item.setAmountInCart(item.getAmountInCart() + 1);
-        itemRepository.save(item).block();
+        return itemRepository.save(item).then();
     }
 
-    private void decreaseAmountInCart(Item item) {
+    private Mono<Void> decreaseAmountInCart(Item item) {
         if (item.getAmountInCart() == 0) {
-            ShopException.throwAmountInCartCantBeNegative();
+            return Mono.error(ShopException.amountInCartCantBeNegative());
         } else {
             item.setAmountInCart(item.getAmountInCart() - 1);
-            itemRepository.save(item).block();
+            return itemRepository.save(item).then();
         }
     }
 
-    private void removeFromCart(Item item) {
+    private Mono<Void> removeFromCart(Item item) {
         item.setAmountInCart(0);
-        itemRepository.save(item).block();
+        return itemRepository.save(item).then();
     }
 
 }

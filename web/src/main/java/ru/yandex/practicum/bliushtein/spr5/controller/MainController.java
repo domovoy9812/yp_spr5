@@ -20,7 +20,7 @@ public class MainController {
 
     @GetMapping
     public String searchItems(Model model, @ModelAttribute ItemSearchParams sp) {
-        PagedItemsDto items = itemService.searchItems(sp.getName(), sp.getPageNumber(), sp.getPageSize(), sp.getSort());
+        PagedItemsDto items = itemService.searchItems(sp.getName(), sp.getPageNumber(), sp.getPageSize(), sp.getSort()).block();
         model.addAttribute("itemsPage", items);
         model.addAttribute("searchParams", sp);
         return "main";

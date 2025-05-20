@@ -32,7 +32,7 @@ public class OrderController {
     }
 
     private void fillOrderInModel(Model model, Long id, boolean isNewOrder) {
-        orderService.getOrder(id).ifPresentOrElse(order -> {
+        orderService.getOrder(id).blockOptional().ifPresentOrElse(order -> {
                     model.addAttribute("order", order);
                     model.addAttribute("isNewOrder", isNewOrder);
                 },
@@ -43,7 +43,7 @@ public class OrderController {
 
     @GetMapping("/orders")
     public String getOrders(Model model) {
-        List<OrderDto> orders = orderService.getAllOrders();
+        List<OrderDto> orders = orderService.getAllOrders().collectList().block();
         model.addAttribute("orders", orders);
         return "orders";
     }

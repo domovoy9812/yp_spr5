@@ -3,6 +3,8 @@ package ru.yandex.practicum.bliushtein.spr5.data.entity;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.util.List;
+
 @Table(name = "orders")
 public class Order {
     @Id
@@ -11,13 +13,17 @@ public class Order {
 
     public Order() {}
 
-    public Order(int totalPrice) {
+    public Order(Long id, int totalPrice) {
+        this.id = id;
         this.totalPrice = totalPrice;
     }
 
-    public Order(Long id, int totalPrice) {
-        this(totalPrice);
-        this.id = id;
+    public Order(int totalPrice) {
+        this(null, totalPrice);
+    }
+
+    public Order(List<Item> items) {
+        this(items.stream().mapToInt(it -> it.getAmountInCart() * it.getPrice()).sum());
     }
 
     public Long getId() {

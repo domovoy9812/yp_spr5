@@ -8,7 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import ru.yandex.practicum.bliushtein.spr5.service.dto.ImageService;
+import ru.yandex.practicum.bliushtein.spr5.service.ImageService;
 
 import java.io.IOException;
 
@@ -33,7 +33,7 @@ public class ImageController {
             return;
         }
         try (var output = response.getOutputStream()) {
-            byte[] image = imageService.getImage(key);
+            byte[] image = imageService.getImage(key).block();
             output.write(image);
         }
     }
