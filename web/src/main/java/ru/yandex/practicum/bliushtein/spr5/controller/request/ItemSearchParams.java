@@ -1,4 +1,4 @@
-package ru.yandex.practicum.bliushtein.spr5.controller;
+package ru.yandex.practicum.bliushtein.spr5.controller.request;
 
 import ru.yandex.practicum.bliushtein.spr5.service.ItemSort;
 

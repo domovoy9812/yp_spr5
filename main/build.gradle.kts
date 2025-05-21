@@ -29,7 +29,7 @@ dependencies {
 	testImplementation("org.testcontainers:junit-jupiter")
 	testImplementation("org.testcontainers:postgresql")
 	testImplementation("org.testcontainers:r2dbc")
-	testImplementation("org.springframework.boot:spring-boot-starter-web")
+	testImplementation("org.springframework.boot:spring-boot-starter-webflux")
 	testImplementation(project(":data"))
 	testImplementation("org.springframework.data:spring-data-r2dbc")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")

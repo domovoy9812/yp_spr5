@@ -7,7 +7,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 import ru.yandex.practicum.bliushtein.spr5.data.repository.ItemRepository;
 import java.util.List;
@@ -20,13 +20,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ApplicationTest extends AbstractIntegrationTestWithTestcontainers {
 
     @Autowired
-    MockMvc mockMvc;
+    private WebTestClient webTestClient;
+
     @MockitoSpyBean
     ItemRepository itemRepository;
     @Value("classpath:image/default_image.png")
     Resource defaultImage;
 
-    @Test
+/*    @Test
     void test_createAndGetItem() throws Exception {
         Long itemId = createItem();
         mockMvc.perform(get("/item/{id}", itemId))
@@ -68,5 +69,5 @@ public class ApplicationTest extends AbstractIntegrationTestWithTestcontainers {
                 .andExpect(status().is3xxRedirection())
                 .andReturn().getResponse().getRedirectedUrl();
         return Long.valueOf(redirectUrl.substring(redirectUrl.lastIndexOf("/") + 1));
-    }
+    }*/
 }

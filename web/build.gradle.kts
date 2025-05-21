@@ -26,8 +26,7 @@ dependencies {
 	implementation(project(":service:service-api"))
 
 	implementation("org.springframework.boot:spring-boot-starter")
-	implementation("org.springframework.boot:spring-boot-starter-web")
-	implementation("io.projectreactor:reactor-core")
+	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	runtimeOnly("org.springframework.boot:spring-boot-starter-thymeleaf")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
+<meta charset="UTF-8" />
 <head>
     <title>Заказ</title>
 </head>
@@ -27,7 +27,7 @@
             <table>
                 <tr>
                     <td>
-                        <a th:href="@{/item/{itemId}(id = ${orderItem.id})}">
+                        <a th:href="@{/item/{itemId}(itemId = ${orderItem.id})}">
                             <img width="150" height="150" th:src="@{/image/{imageId}(imageId=${orderItem.imageId})}"/>
                         </a>
                     </td>

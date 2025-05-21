@@ -2,10 +2,10 @@ package ru.yandex.practicum.bliushtein.spr5.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.reactive.result.view.Rendering;
+import reactor.core.publisher.Mono;
 import ru.yandex.practicum.bliushtein.spr5.service.CartService;
-import ru.yandex.practicum.bliushtein.spr5.service.dto.CartDto;
 
 @Controller
 @RequestMapping("/cart")
@@ -17,19 +17,17 @@ public class CartController {
     }
 
     @GetMapping
-    public String getCart(Model model) {
-        loadCartToModel(model);
-        return "cart";
+    public Mono<Rendering> getCart() {
+        Rendering rendering = Rendering.view("cart")
+                .modelAttribute("cart", cartService.getCart())
+                .build();
+        return Mono.just(rendering);
     }
 
     @PostMapping("/buy")
-    public String buy() {
-        Long orderId = cartService.buy().block();
-        return "redirect:/order/" + orderId + "/new";
+    public Mono<Rendering> buy() {
+        return cartService.buy()
+                .map(orderId -> Rendering.redirectTo("/order/" + orderId + "/new").build());
     }
 
-    private void loadCartToModel(Model model) {
-        CartDto cart = cartService.getCart().block();
-        model.addAttribute("cart", cart);
-    }
 }
