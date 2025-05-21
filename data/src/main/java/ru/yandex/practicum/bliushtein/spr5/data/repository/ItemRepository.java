@@ -20,5 +20,6 @@ public interface ItemRepository extends R2dbcRepository<Item, Long> {
         return findByAmountInCartGreaterThan(0, Sort.by("id"));
     }
     Flux<Item> findByNameLike(String name, Pageable pageable);
-    /*Flux<Item> find(Pageable pageable);*/
+
+    Flux<Item> findAllBy(Pageable pageable);
 }

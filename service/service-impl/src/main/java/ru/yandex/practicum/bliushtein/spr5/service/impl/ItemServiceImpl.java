@@ -56,18 +56,18 @@ public class ItemServiceImpl implements ItemService {
         return itemRepository.findById(itemId).map(itemMapper::toDto);
     }
 
-    //TODO implement paging correctly
     @Override
     public Mono<PagedItemsDto> searchItems(String name, int pageNumber, int pageSize, ItemSort sort) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sort.getColumns()));
         Flux<Item> itemFlux;
         if (StringUtils.isBlank(name)) {
-            itemFlux = itemRepository.findAll();
+            itemFlux = itemRepository.findAllBy(pageable);
         } else {
             itemFlux = itemRepository.findByNameLike("%" + name + "%", pageable);
         }
-        return itemFlux.map(itemMapper::toDto).collectList()
-                .map(itemDtos -> new PagedItemsDto(itemDtos, false, false));
+        return itemFlux.map(itemMapper::toDto).collectList().zipWith(itemRepository.count())
+                .map(pageSource -> new PagedItemsDto(pageSource.getT1(), pageNumber, pageSize,
+                        pageSource.getT2()));
     }
 
 }
