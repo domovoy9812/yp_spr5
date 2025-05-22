@@ -45,7 +45,7 @@ public class ItemController {
         return Mono.just(rendering);
     }
 
-    @PostMapping(value = "/{id}/changeAmountInCart")
+    @PostMapping("/{id}/changeAmountInCart")
     public Mono<Rendering> changeAmountInCart(ServerHttpRequest request,
                                               @PathVariable("id") Long id,
                                               ChangeAmountInCartRequest body) {

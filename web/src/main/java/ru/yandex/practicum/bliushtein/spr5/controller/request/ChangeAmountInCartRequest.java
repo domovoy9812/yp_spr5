@@ -5,6 +5,10 @@ public class ChangeAmountInCartRequest {
 
     public ChangeAmountInCartRequest() { }
 
+    public ChangeAmountInCartRequest(String action) {
+        this.action = action;
+    }
+
     public String getAction() {
         return action;
     }
