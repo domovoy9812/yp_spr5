@@ -22,9 +22,9 @@ https://github.com/domovoy9812/yp_spr5.git
 
 | параметр                                    | описание                                                                                                          | значение по умолчанию                                     |
 |---------------------------------------------|-------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------|
-| spring.datasource.url                       | строка подключения к БД                                                                                           | jdbc:postgresql://localhost:5432/bliushtein_yp_sprint5_db |
-| spring.datasource.username                  | имя пользователя для подключения к БД                                                                             | bliushtein_yp_sprint5                                     |
-| spring.datasource.password                  | пароль                                                                                                            | 12345                                                     |
+| spring.r2dbc.url                       | строка подключения к БД                                                                                           | r2dbc:postgresql://localhost:5432/bliushtein_yp_sprint5_db |
+| spring.r2dbc.username                  | имя пользователя для подключения к БД                                                                             | bliushtein_yp_sprint5                                     |
+| spring.r2dbc.password                  | пароль                                                                                                            | 12345                                                     |
 2. Для запуска приложения в контейнере docker данные настройки не требуются и при запуске приложения будут проигнорированы
 ### Сборка и запуск
 1. Для сборки проекта нужно выполнить команду ```gradlew clean build```

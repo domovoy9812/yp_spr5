@@ -22,12 +22,6 @@ spring:
     init:
       mode: always
       schema-locations: classpath:/db/schema.sql
-  jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        hbm2ddl:
-          auto: update
 logging:
   level:
     ru.yandex.practicum.bliushtein.spr5: "debug"
