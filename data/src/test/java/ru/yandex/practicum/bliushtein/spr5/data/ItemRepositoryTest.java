@@ -13,7 +13,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static ru.yandex.practicum.bliushtein.spr5.data.TestData.*;
 
-public class ItemRepositoryTest extends AbstractJpaTestWithTestcontainers {
+public class ItemRepositoryTest extends AbstractRepositoryTestWithTestcontainers {
 
     @Autowired
     ItemRepository itemRepository;

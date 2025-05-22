@@ -8,7 +8,7 @@ import ru.yandex.practicum.bliushtein.spr5.data.repository.ImageRepository;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ImageRepositoryTest extends AbstractJpaTestWithTestcontainers {
+public class ImageRepositoryTest extends AbstractRepositoryTestWithTestcontainers {
 
     @Autowired
     ImageRepository imageRepository;

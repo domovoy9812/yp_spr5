@@ -13,7 +13,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class OrderItemRepositoryTest extends AbstractJpaTestWithTestcontainers {
+public class OrderItemRepositoryTest extends AbstractRepositoryTestWithTestcontainers {
     @Autowired
     OrderItemRepository orderItemRepository;
     @Autowired

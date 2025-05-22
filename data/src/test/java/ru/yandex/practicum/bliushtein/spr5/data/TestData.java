@@ -1,6 +1,8 @@
 package ru.yandex.practicum.bliushtein.spr5.data;
 
 import ru.yandex.practicum.bliushtein.spr5.data.entity.Item;
+import ru.yandex.practicum.bliushtein.spr5.data.entity.Order;
+import ru.yandex.practicum.bliushtein.spr5.data.entity.OrderItem;
 
 import java.util.List;
 import java.util.stream.LongStream;
@@ -16,4 +18,8 @@ public class TestData {
     public static Item copyItem(Item item) {
         return new Item(item.getId(), item.getName(), item.getDescription(), item.getPrice(), item.getAmountInCart());
     }
+    public static final Order NOT_SAVED_ORDER = new Order(ITEM.getPrice());
+    public static final Order SAVED_ORDER = new Order(1L, NOT_SAVED_ORDER.getTotalPrice());
+    public static final OrderItem SAVED_ORDER_ITEM = new OrderItem(SAVED_ORDER.getId(), ITEM);
+
 }

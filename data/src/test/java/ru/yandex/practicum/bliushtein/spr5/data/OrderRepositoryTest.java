@@ -8,7 +8,7 @@ import ru.yandex.practicum.bliushtein.spr5.data.repository.OrderRepository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class OrderRepositoryTest extends AbstractJpaTestWithTestcontainers {
+public class OrderRepositoryTest extends AbstractRepositoryTestWithTestcontainers {
 
     @Autowired
     OrderRepository orderRepository;

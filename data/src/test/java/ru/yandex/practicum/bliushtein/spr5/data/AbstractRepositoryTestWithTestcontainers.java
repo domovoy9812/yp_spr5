@@ -16,7 +16,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @ContextConfiguration(classes = R2dbcTestConfiguration.class)
 @TestPropertySource("classpath:application-test.yml")
 @Testcontainers
-abstract class AbstractJpaTestWithTestcontainers {
+abstract class AbstractRepositoryTestWithTestcontainers {
 
 	@ServiceConnection
 	static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:17");
