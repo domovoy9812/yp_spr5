@@ -8,9 +8,9 @@ services:
       - "8080:8080"
       - "8081:8081"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgresql-db:5432/bliushtein_yp_sprint5_db
-      SPRING_DATASOURCE_USERNAME: bliushtein_yp_sprint5
-      SPRING_DATASOURCE_PASSWORD: 12345
+      SPRING_R2DBC_URL: r2dbc:postgresql://postgresql-db:5432/bliushtein_yp_sprint5_db
+      SPRING_R2DBC_USERNAME: bliushtein_yp_sprint5
+      SPRING_R2DBC_PASSWORD: 12345
   postgresql-db:
     image: "postgres:17"
     environment:
