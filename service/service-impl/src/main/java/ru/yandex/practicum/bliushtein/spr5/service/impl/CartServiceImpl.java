@@ -61,7 +61,7 @@ public class CartServiceImpl implements CartService {
     @Transactional
     public Mono<Long> buy() {
         return itemRepository.findItemsInCart()
-                .collectList().flatMap(this::createOrder);
+                .collectList().flatMap(this::createOrder).flatMap(id -> itemRepository.clearCart().then(Mono.just(id)));
     }
 
     private Mono<Long> createOrder(List<Item> items) {
