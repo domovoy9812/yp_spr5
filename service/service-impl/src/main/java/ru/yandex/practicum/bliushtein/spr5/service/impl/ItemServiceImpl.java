@@ -2,6 +2,7 @@ package ru.yandex.practicum.bliushtein.spr5.service.impl;
 
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -38,6 +39,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
+    @CachePut(value = "items", key = "#result.id")
     public Mono<ItemDto> createItem(String name, String description, int price, byte[] imageData) {
         if (price <= 0) {
             return Mono.error(ShopException.priceShouldBePositive(price));
@@ -59,6 +61,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    @Cacheable("itemsSearchResult")
     public Mono<PagedItemsDto> searchItems(String name, int pageNumber, int pageSize, ItemSort sort) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sort.getColumns()));
         Flux<Item> itemFlux;

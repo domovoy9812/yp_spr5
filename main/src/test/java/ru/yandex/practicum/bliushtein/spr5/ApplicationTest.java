@@ -25,7 +25,7 @@ public class ApplicationTest extends AbstractIntegrationTestWithTestcontainers {
     Resource defaultImage;
 
     @Test
-    void test_createAndGetItem() throws Exception {
+    void test_createAndGetItem() {
         Long itemId = createItem();
         webTestClient.get().uri("/item/{id}", itemId)
                 .exchange()
@@ -38,7 +38,7 @@ public class ApplicationTest extends AbstractIntegrationTestWithTestcontainers {
     }
 
     @Test
-    void test_buy_error() throws Exception {
+    void test_buy_error() {
         Long itemId = createItem();
         when(itemRepository.clearCart()).thenReturn(Mono.error(new RuntimeException()));
 
@@ -55,17 +55,6 @@ public class ApplicationTest extends AbstractIntegrationTestWithTestcontainers {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody().xpath("//tr/td").doesNotExist();
-        /*mockMvc.perform(post("/item/{id}/changeAmountInCart", itemId)
-                        .param("action", "plus"))
-                .andExpect(status().is3xxRedirection());
-        mockMvc.perform(post("/cart/buy"))
-                .andExpect(status().is5xxServerError())
-                .andExpect(view().name("error"))
-                .andExpect(model().attribute("exClass", RuntimeException.class.getName()));
-        Object orders = mockMvc.perform(get("/orders"))
-                .andExpect(status().isOk())
-                .andReturn().getModelAndView().getModel().get("orders");
-        assertEquals(0, ((List) orders).size());*/
     }
 
     Long createItem() {

@@ -1,6 +1,8 @@
 package ru.yandex.practicum.bliushtein.spr5.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
@@ -30,6 +32,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "cart", key = "'default'")
     public Mono<Void> increaseAmountInCart(Long itemId) {
         return itemRepository.findById(itemId)
                 .switchIfEmpty(Mono.error(ShopException.itemNotFound(itemId)))
@@ -38,6 +41,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "cart", key = "'default'")
     public Mono<Void> decreaseAmountInCart(Long itemId) {
         return itemRepository.findById(itemId)
                 .switchIfEmpty(Mono.error(ShopException.itemNotFound(itemId)))
@@ -46,6 +50,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "cart", key = "'default'")
     public Mono<Void> removeFromCart(Long itemId) {
         return itemRepository.findById(itemId)
                 .switchIfEmpty(Mono.error(ShopException.itemNotFound(itemId)))
@@ -53,12 +58,14 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
+    @Cacheable(value = "cart", key = "'default'")
     public Mono<CartDto> getCart() {
         return itemRepository.findItemsInCart().map(itemMapper::toDto).collectList().map(CartDto::new);
     }
 
     @Override
     @Transactional
+    @CacheEvict(value = "cart", key = "'default'")
     public Mono<Long> buy() {
         return itemRepository.findItemsInCart()
                 .collectList().flatMap(this::createOrder).flatMap(id -> itemRepository.clearCart().then(Mono.just(id)));
