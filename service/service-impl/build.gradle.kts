@@ -24,10 +24,11 @@ repositories {
 dependencies {
 	implementation(project(":service:service-api"))
 	implementation(project(":data"))
-
+	implementation("org.springframework.boot:spring-boot-starter-data-redis")
 	implementation("org.springframework.boot:spring-boot-autoconfigure")
 	implementation("org.springframework.data:spring-data-r2dbc")
 	implementation("org.apache.commons:commons-lang3")
+	implementation("com.fasterxml.jackson.core:jackson-databind")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }

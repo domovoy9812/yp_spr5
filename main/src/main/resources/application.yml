@@ -14,6 +14,10 @@ management:
 spring:
   application:
     name: bliushtein_sprint5
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
   r2dbc:
     url: r2dbc:postgresql://localhost:5432/bliushtein_yp_sprint5_db
     username: bliushtein_yp_sprint5

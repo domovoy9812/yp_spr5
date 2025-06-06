@@ -2,6 +2,7 @@ package ru.yandex.practicum.bliushtein.spr5.service.impl;
 
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -52,6 +53,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    @Cacheable("items")
     public Mono<ItemDto> findItemById(Long itemId) {
         return itemRepository.findById(itemId).map(itemMapper::toDto);
     }
