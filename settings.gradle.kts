@@ -1,2 +1,2 @@
 rootProject.name = "bliushtein_sprint5"
-include("web", "data", "service:service-api", "service:service-impl", "main")
+include("web", "data", "service:service-api", "service:service-impl", "main", "rest-api")

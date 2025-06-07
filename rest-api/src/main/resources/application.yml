@@ -1,0 +1,26 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      group:
+        readiness:
+          include: readinessState
+          show-details: always
+server:
+  port: 8081
+spring:
+  jackson:
+    date-format: ru.yandex.practicum.bliushtein.spr5.rest.configuration.RFC3339DateFormat
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+  application:
+    name: rest-api
+springdoc:
+  swagger-ui:
+    enabled: true
+    tryItOutEnabled: true

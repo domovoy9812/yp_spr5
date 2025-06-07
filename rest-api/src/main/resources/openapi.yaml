@@ -1,0 +1,115 @@
+openapi: 3.0.3
+info:
+  title: API для получения текущего баланса и выполнения платежей
+  version: 1.0.0
+servers:
+- url: /
+paths:
+  /balance:
+    get:
+      operationId: getBalance
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Balance"
+          description: Успешный ответ
+        "5XX":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/getBalance_5XX_response"
+          description: Внутренняя ошибка сервиса
+      summary: Получить текущий баланс
+      x-accepts:
+      - application/json
+    put:
+      operationId: pay
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/pay_request"
+        description: Данные для выполнения платежа
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Balance"
+          description: Платеж выполнен успешно
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotEnoughMoney"
+          description: Недостаточно средств для совершения платежа
+        "5XX":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/getBalance_5XX_response"
+          description: Внутренняя ошибка сервиса
+      summary: оплатить заказ
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+components:
+  responses:
+    InternalServerError:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/getBalance_5XX_response"
+      description: Внутренняя ошибка сервиса
+  schemas:
+    Balance:
+      example:
+        balance: 0
+      properties:
+        balance:
+          description: текущий баланс
+          exclusiveMinimum: false
+          minimum: 0
+          nullable: false
+          type: integer
+      required:
+      - balance
+      type: object
+    NotEnoughMoney:
+      example:
+        actualBalance: 0
+        requiredBalance: 0
+      properties:
+        actualBalance:
+          description: текущий баланс
+          exclusiveMinimum: false
+          minimum: 0
+          nullable: false
+          type: integer
+        requiredBalance:
+          description: минимально необходимый баланс для совершения платежа
+          exclusiveMinimum: true
+          minimum: 0
+          nullable: false
+          type: integer
+      type: object
+    getBalance_5XX_response:
+      example:
+        error: error
+      properties:
+        error:
+          nullable: false
+          type: string
+      required:
+      - error
+      type: object
+    pay_request:
+      properties:
+        price:
+          exclusiveMinimum: true
+          minimum: 0
+          type: integer
+      type: object
