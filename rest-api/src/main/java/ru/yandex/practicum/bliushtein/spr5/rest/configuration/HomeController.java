@@ -19,7 +19,7 @@ public class HomeController {
     RouterFunction<ServerResponse> index() {
         return route(
             GET("/"),
-            req -> ServerResponse.temporaryRedirect(URI.create("swagger-ui.html")).build()
+            req -> ServerResponse.temporaryRedirect(URI.create("/swagger-ui/index.html")).build()
         );
     }
 
