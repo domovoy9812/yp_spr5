@@ -15,7 +15,7 @@ java {
 		languageVersion = JavaLanguageVersion.of(21)
 	}
 }
-
+//TODO использовать динамически сгенерированные классы при сборке; удалить закоммиченые классы
 tasks.named<GenerateTask>("openApiGenerate") {
 	generatorName.set("spring")
 	inputSpec.set("${layout.projectDirectory}/src/main/resources/openapi.yaml")

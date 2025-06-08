@@ -14,6 +14,7 @@ import ru.yandex.practicum.bliushtein.spr5.data.entity.Order;
 import ru.yandex.practicum.bliushtein.spr5.data.repository.ItemRepository;
 import ru.yandex.practicum.bliushtein.spr5.data.repository.OrderWithItemsRepository;
 import ru.yandex.practicum.bliushtein.spr5.service.CartService;
+import ru.yandex.practicum.bliushtein.spr5.service.PaymentService;
 import ru.yandex.practicum.bliushtein.spr5.service.ShopException;
 import ru.yandex.practicum.bliushtein.spr5.service.dto.CartDto;
 import ru.yandex.practicum.bliushtein.spr5.service.dto.ItemDto;
@@ -34,6 +35,9 @@ public class CartServiceImplTest {
 
     @MockitoBean
     ItemRepository itemRepositoryMock;
+
+    @MockitoBean
+    PaymentService paymentServiceMock;
 
     @MockitoBean
     OrderWithItemsRepository orderRepositoryMock;
@@ -136,6 +140,7 @@ public class CartServiceImplTest {
                 .thenReturn(Flux.just(ITEM_1));
         when(itemRepositoryMock.clearCart()).thenReturn(Mono.empty());
         when(orderRepositoryMock.save(any(), any())).thenReturn(Mono.just(CREATED_ORDER.getId()));
+        when(paymentServiceMock.pay(any())).thenReturn(Mono.just(0));
         Long orderId = cartService.buy().block();
         assertEquals(CREATED_ORDER.getId(), orderId);
         ArgumentCaptor<Order> orderCaptor = ArgumentCaptor.forClass(Order.class);

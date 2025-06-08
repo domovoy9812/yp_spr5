@@ -35,3 +35,4 @@ logging:
       file: docker-compose-for-bootRun.yml
       start:
         log-level: debug
+payment-api-url: http://localhost:8081

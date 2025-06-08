@@ -9,6 +9,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 import ru.yandex.practicum.bliushtein.spr5.service.CartService;
+import ru.yandex.practicum.bliushtein.spr5.service.PaymentService;
 
 import static org.mockito.Mockito.*;
 import static ru.yandex.practicum.bliushtein.spr5.controller.TestData.*;
@@ -21,6 +22,9 @@ public class CartControllerTest {
 
     @MockitoBean
     CartService cartServiceMock;
+
+    @MockitoBean
+    PaymentService paymentServiceMock;
 
     @Test
     void test_getCart() {
