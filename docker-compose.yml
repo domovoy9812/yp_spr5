@@ -2,17 +2,18 @@ version: "3.8"
 services:
   app:
     build:
-      context: .
+      context: main
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
-      - "8081:8081"
+      - "8082:8082"
     environment:
       SPRING_R2DBC_URL: r2dbc:postgresql://postgresql-db:5432/bliushtein_yp_sprint5_db
       SPRING_R2DBC_USERNAME: bliushtein_yp_sprint5
       SPRING_R2DBC_PASSWORD: 12345
       SPRING_DATA_REDIS_HOST: redis-cache
       SPRING_DATA_REDIS_PORT: 6379
+      PAYMENT-API-URL: http://rest-api:8081
   postgresql-db:
     image: "postgres:17"
     environment:
@@ -23,3 +24,9 @@ services:
       - "5432:5432"
   redis-cache:
     image: "redis:7.4.2-bookworm"
+  rest-api:
+    build:
+      context: rest-api
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
