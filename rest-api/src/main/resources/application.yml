@@ -15,9 +15,10 @@ server:
   port: 8081
 spring:
   jackson:
-    date-format: ru.yandex.practicum.bliushtein.spr5.rest.configuration.RFC3339DateFormat
+    date-format: ru.yandex.practicum.bliushtein.spr5.rest.RFC3339DateFormat
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
+    default-property-inclusion: NON_NULL
   application:
     name: rest-api
 springdoc:

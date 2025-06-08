@@ -44,7 +44,7 @@ tasks.named<GenerateTask>("openApiGenerate") {
 	generatorName.set("java")
 	inputSpec.set("$rootDir/rest-api/src/main/resources/openapi.yaml")
 	outputDir.set("${layout.buildDirectory.get()}/generated")
-	ignoreFileOverride.set("$projectDir/.openapi-generator-java-sources.ignore")
+	ignoreFileOverride.set("$projectDir/.openapi-generator-ignore")
 	modelPackage.set("ru.yandex.practicum.bliushtein.spr5.service.client.model")
 	apiPackage.set("ru.yandex.practicum.bliushtein.spr5.service.client.api")
 	configOptions.set(

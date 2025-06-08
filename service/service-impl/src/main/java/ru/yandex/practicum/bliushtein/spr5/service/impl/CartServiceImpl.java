@@ -98,7 +98,7 @@ public class CartServiceImpl implements CartService {
     public Mono<Long> buy() {
         return itemRepository.findItemsInCart()
                 .collectList().flatMap(this::createOrder)
-                .flatMap(id -> itemRepository.clearCart().then(Mono.just(id)));
+                .flatMap(id -> itemRepository.clearCart().map(i -> id));
     }
 
     private Mono<Long> createOrder(List<Item> items) {
@@ -106,7 +106,7 @@ public class CartServiceImpl implements CartService {
             return Mono.error(ShopException.cartIsEmpty());
         }
         Order order = new Order(items);
-        return paymentService.pay(order.getTotalPrice()).then(orderRepository.save(order, items));
+        return paymentService.pay(order.getTotalPrice()).flatMap(i-> orderRepository.save(order, items));
     }
 
     private Mono<Void> increaseAmountInCart(Item item) {

@@ -138,9 +138,9 @@ public class CartServiceImplTest {
     void test_buy() {
         when(itemRepositoryMock.findItemsInCart())
                 .thenReturn(Flux.just(ITEM_1));
-        when(itemRepositoryMock.clearCart()).thenReturn(Mono.empty());
-        when(orderRepositoryMock.save(any(), any())).thenReturn(Mono.just(CREATED_ORDER.getId()));
         when(paymentServiceMock.pay(any())).thenReturn(Mono.just(0));
+        when(orderRepositoryMock.save(any(), any())).thenReturn(Mono.just(CREATED_ORDER.getId()));
+        when(itemRepositoryMock.clearCart()).thenReturn(Mono.just(1));
         Long orderId = cartService.buy().block();
         assertEquals(CREATED_ORDER.getId(), orderId);
         ArgumentCaptor<Order> orderCaptor = ArgumentCaptor.forClass(Order.class);
@@ -152,6 +152,16 @@ public class CartServiceImplTest {
         assertEquals(1, items.size());
         assertEquals(ITEM_1, items.getFirst());
         verify(itemRepositoryMock).clearCart();
+    }
+
+    @Test
+    void test_buy_payment_error() {
+        when(itemRepositoryMock.findItemsInCart())
+                .thenReturn(Flux.just(ITEM_1));
+        when(paymentServiceMock.pay(any())).thenReturn(Mono.error(new ShopException("test error message")));
+        assertThrows(ShopException.class, () -> cartService.buy().block());
+        verify(orderRepositoryMock, never()).save(any(), any());
+        verify(itemRepositoryMock, never()).clearCart();
     }
 
     @Test

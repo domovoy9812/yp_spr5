@@ -13,13 +13,17 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Balance"
+                $ref: "#/components/schemas/response"
+              examples:
+                $ref: "#/components/examples/success_response"
           description: Успешный ответ
         "5XX":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/getBalance_5XX_response"
+                $ref: "#/components/schemas/response"
+              examples:
+                $ref: "#/components/examples/error_response"
           description: Внутренняя ошибка сервиса
       summary: Получить текущий баланс
       x-accepts:
@@ -38,74 +42,68 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Balance"
+                $ref: "#/components/schemas/response"
+              examples:
+                $ref: "#/components/examples/success_response"
           description: Платеж выполнен успешно
         "400":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/NotEnoughMoney"
+                $ref: "#/components/schemas/response"
+              examples:
+                $ref: "#/components/examples/error_response"
           description: Недостаточно средств для совершения платежа
         "5XX":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/getBalance_5XX_response"
+                $ref: "#/components/schemas/response"
+              examples:
+                $ref: "#/components/examples/error_response"
           description: Внутренняя ошибка сервиса
       summary: оплатить заказ
       x-content-type: application/json
       x-accepts:
       - application/json
 components:
-  responses:
-    InternalServerError:
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/getBalance_5XX_response"
-      description: Внутренняя ошибка сервиса
   schemas:
-    Balance:
-      example:
-        balance: 0
+    response:
+      type: object
       properties:
+        type:
+          type: string
+          enum:
+            - success
+            - error
         balance:
           description: текущий баланс
           exclusiveMinimum: false
           minimum: 0
           nullable: false
           type: integer
-      required:
-      - balance
-      type: object
-    NotEnoughMoney:
-      example:
-        actualBalance: 0
-        requiredBalance: 0
-      properties:
-        actualBalance:
-          description: текущий баланс
-          exclusiveMinimum: false
-          minimum: 0
-          nullable: false
-          type: integer
-        requiredBalance:
-          description: минимально необходимый баланс для совершения платежа
-          exclusiveMinimum: true
-          minimum: 0
-          nullable: false
-          type: integer
-      type: object
-    getBalance_5XX_response:
-      example:
-        error: error
-      properties:
         error:
           nullable: false
           type: string
       required:
-      - error
-      type: object
+        - type
+#      discriminator:
+#        propertyName: type
+#        mapping:
+#          success: '#/components/schemas/ok_response'
+#          error: '#/components/schemas/nok_response'
+#    ok_response:
+#      allOf:
+#        - $ref: '#/components/schemas/response'
+#        - type: object
+#          required:
+#            - balance
+#    nok_response:
+#      allOf:
+#        - $ref: '#/components/schemas/response'
+#        - type: object
+#          required:
+#            - error
     pay_request:
       properties:
         price:
@@ -113,3 +111,14 @@ components:
           minimum: 0
           type: integer
       type: object
+  examples:
+    success_response:
+      summary: успешный ответ
+      value:
+        type: success
+        balance: 50
+    error_response:
+      summary: ошибка
+      value:
+        type: error
+        error: сообщение об ошибке

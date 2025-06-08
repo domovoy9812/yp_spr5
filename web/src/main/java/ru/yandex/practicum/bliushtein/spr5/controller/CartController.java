@@ -23,7 +23,9 @@ public class CartController {
     public Mono<Rendering> getCart() {
         Rendering rendering = Rendering.view("cart")
                 .modelAttribute("cart", cartService.getCart())
-                .modelAttribute("balance", paymentService.getBalance())
+                .modelAttribute("balance", paymentService.getBalance().map(BalanceInfo::new)
+                        .onErrorReturn(BalanceInfo.ERROR)
+                        )
                 .build();
         return Mono.just(rendering);
     }

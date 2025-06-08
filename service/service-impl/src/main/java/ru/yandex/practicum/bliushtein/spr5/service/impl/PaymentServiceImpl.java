@@ -7,8 +7,7 @@ import reactor.core.publisher.Mono;
 import ru.yandex.practicum.bliushtein.spr5.service.PaymentService;
 import ru.yandex.practicum.bliushtein.spr5.service.ShopException;
 import ru.yandex.practicum.bliushtein.spr5.service.client.api.DefaultApi;
-import ru.yandex.practicum.bliushtein.spr5.service.client.model.Balance;
-import ru.yandex.practicum.bliushtein.spr5.service.client.model.NotEnoughMoney;
+import ru.yandex.practicum.bliushtein.spr5.service.client.model.Response;
 import ru.yandex.practicum.bliushtein.spr5.service.client.model.PayRequest;
 
 @Service
@@ -21,22 +20,21 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public Mono<Integer> getBalance() {
-        //TODO избавиться от -1
-        return api.getBalance().onErrorReturn(new Balance().balance(-1)).map(Balance::getBalance);
+        return api.getBalance().doOnError(PaymentServiceImpl::mapException).map(Response::getBalance);
     }
 
     @Override
     public Mono<Integer> pay(Integer price) {
         return api.pay(new PayRequest().price(price))
-                .doOnError(PaymentServiceImpl::handleException)
-                .map(Balance::getBalance);
+                .onErrorMap(PaymentServiceImpl::mapException)
+                .map(Response::getBalance);
     }
 
-    private static void handleException(Throwable e) {
-        if (e instanceof WebClientResponseException.BadRequest br) {
-            NotEnoughMoney response = br.getResponseBodyAs(NotEnoughMoney.class);
-            throw ShopException.notEnoughMoney(response.getRequiredBalance(), response.getActualBalance());
+    private static ShopException mapException(Throwable e) {
+        if (e instanceof WebClientResponseException wcrException) {
+            Response response = wcrException.getResponseBodyAs(Response.class);
+            return new ShopException("Error during payment service call. " + response.getError(), e);
         }
-        throw new ShopException("Error during payment service call", e);
+        return new ShopException("Error during payment service call", e);
     }
 }
